@@ -1,0 +1,25 @@
+{
+  "name": "CLE4-Topogame",
+  "version": "1.0.0",
+  "description": "Dit is de github repository voor CLE4 waarbij wij een game maken met als leerdoel aardrijkskunde,\r de doelgroep zijn kinderen die topografie leren(onder de 12)",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel src/index.html --dist-dir docs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Calvin9360/CLE4-Topogame.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Calvin9360/CLE4-Topogame/issues"
+  },
+  "homepage": "https://github.com/Calvin9360/CLE4-Topogame#readme",
+  "dependencies": {
+    "parcel": "^2.5.0",
+    "pixi.js": "^6.3.2"
+  }
+}
