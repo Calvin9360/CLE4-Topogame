@@ -1,9 +1,9 @@
 import * as PIXI from "pixi.js"
 import { Player } from "./player"
-import { Fish } from "./enemy"
-import fishImage from "./images/shark.png"
+import { Enemy } from "./enemy"
 import playerImage from "./images/spacecraft.png"
 import backgroundImage from "./images/background_nl.png"
+import enemyImage from "./images/shark.png"
 import deadImage from "./images/bones.png"
 
 
@@ -14,10 +14,10 @@ export class Game {
     loader: PIXI.Loader
     player: Player
     background: PIXI.Sprite
-    fishes: Fish[] = []
+    enemies: Enemy[] = []
 
     constructor() {
-            this.pixi = new PIXI.Application({ 
+        this.pixi = new PIXI.Application({
             width: screen.width,
             height: screen.height
         });
@@ -27,7 +27,7 @@ export class Game {
         this.loader
             .add("playerTexture", playerImage)
             .add("backgroundTexture", backgroundImage)
-            .add("fishtexture", fishImage)
+            .add("enemytexture", enemyImage)
             .add("deadTexture", deadImage)
 
         this.loader.load(() => this.doneLoading())
@@ -39,13 +39,13 @@ export class Game {
         this.background = new PIXI.Sprite(this.loader.resources["backgroundTexture"].texture!);
         this.pixi.stage.addChild(this.background)
 
-         //enemy
-            for (let i = 0; i<10; i++) {
+        //enemy
+        for (let i = 0; i < 10; i++) {
             console.log("spawned")
-            let fish = new Fish(this, this.loader.resources["fishTexture"].texture!, this.loader.resources["deadTexture"].texture!)
-            this.pixi.stage.addChild(fish) 
-            this.fishes.push(fish)
-           }
+            let enemy = new Enemy(this, this.loader.resources["enemytexture"].texture!, this.loader.resources["deadTexture"].texture!)
+            this.pixi.stage.addChild(enemy)
+            this.enemies.push(enemy)
+        }
 
         //Player
         this.player = new Player(this, this.loader.resources["playerTexture"].texture!);
@@ -61,8 +61,8 @@ export class Game {
 
     update(delta: number) {
         this.player.update(delta)
-        for(let fish of this.fishes){
-            fish.update(delta)
+        for (let enemy of this.enemies) {
+            enemy.update(delta)
         }
     }
 }

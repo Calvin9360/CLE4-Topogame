@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js"
 import { Game } from "./game"
 
 
-export class Fish extends PIXI.Sprite {
+export class Enemy extends PIXI.Sprite {
 
     deadTexture : PIXI.Texture
     game: Game

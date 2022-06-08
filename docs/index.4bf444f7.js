@@ -538,16 +538,16 @@ parcelHelpers.export(exports, "Game", ()=>Game
 var _pixiJs = require("pixi.js");
 var _player = require("./player");
 var _enemy = require("./enemy");
-var _sharkPng = require("./images/shark.png");
-var _sharkPngDefault = parcelHelpers.interopDefault(_sharkPng);
 var _spacecraftPng = require("./images/spacecraft.png");
 var _spacecraftPngDefault = parcelHelpers.interopDefault(_spacecraftPng);
 var _backgroundNlPng = require("./images/background_nl.png");
 var _backgroundNlPngDefault = parcelHelpers.interopDefault(_backgroundNlPng);
+var _sharkPng = require("./images/shark.png");
+var _sharkPngDefault = parcelHelpers.interopDefault(_sharkPng);
 var _bonesPng = require("./images/bones.png");
 var _bonesPngDefault = parcelHelpers.interopDefault(_bonesPng);
 class Game {
-    fishes = [];
+    enemies = [];
     constructor(){
         this.pixi = new _pixiJs.Application({
             width: screen.width,
@@ -555,7 +555,7 @@ class Game {
         });
         document.body.appendChild(this.pixi.view);
         this.loader = new _pixiJs.Loader();
-        this.loader.add("playerTexture", _spacecraftPngDefault.default).add("backgroundTexture", _backgroundNlPngDefault.default).add("fishtexture", _sharkPngDefault.default).add("deadTexture", _bonesPngDefault.default);
+        this.loader.add("playerTexture", _spacecraftPngDefault.default).add("backgroundTexture", _backgroundNlPngDefault.default).add("enemytexture", _sharkPngDefault.default).add("deadTexture", _bonesPngDefault.default);
         this.loader.load(()=>this.doneLoading()
         );
     }
@@ -566,9 +566,9 @@ class Game {
         //enemy
         for(let i = 0; i < 10; i++){
             console.log("spawned");
-            let fish = new _enemy.Fish(this, this.loader.resources["fishTexture"].texture, this.loader.resources["deadTexture"].texture);
-            this.pixi.stage.addChild(fish);
-            this.fishes.push(fish);
+            let enemy = new _enemy.Enemy(this, this.loader.resources["enemytexture"].texture, this.loader.resources["deadTexture"].texture);
+            this.pixi.stage.addChild(enemy);
+            this.enemies.push(enemy);
         }
         //Player
         this.player = new _player.Player(this, this.loader.resources["playerTexture"].texture);
@@ -580,11 +580,11 @@ class Game {
     }
     update(delta) {
         this.player.update(delta);
-        for (let fish of this.fishes)fish.update(delta);
+        for (let enemy of this.enemies)enemy.update(delta);
     }
 }
 
-},{"pixi.js":"dsYej","./player":"6OTSH","./enemy":"e8Rej","./images/spacecraft.png":"gZ8P8","./images/background_nl.png":"fNGPz","./images/bones.png":"5gmO0","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./images/shark.png":"9NaJf"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","./player":"6OTSH","./images/spacecraft.png":"gZ8P8","./images/background_nl.png":"fNGPz","./images/bones.png":"5gmO0","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./images/shark.png":"9NaJf","./enemy":"e8Rej"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -37179,45 +37179,6 @@ class Player extends _pixiJs.Sprite {
     }
 }
 
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"e8Rej":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Fish", ()=>Fish
-);
-var _pixiJs = require("pixi.js");
-class Fish extends _pixiJs.Sprite {
-    alive = true;
-    constructor(game, texture, deadTexture){
-        super(texture);
-        this.game = game;
-        this.interactive = true;
-        this.buttonMode = true;
-        this.deadTexture = deadTexture;
-        this.on('pointerdown', ()=>this.killfish()
-        );
-        this.x = Math.random() * 1000;
-        this.y = Math.random() * 500;
-        this.scale.set(0.5 + Math.random() * 1.5);
-        const myfilter = new _pixiJs.filters.ColorMatrixFilter();
-        this.filters = [
-            myfilter
-        ];
-        myfilter.hue(Math.random() * 360, false);
-    }
-    update(delta) {
-        if (this.alive) {
-            this.x += Math.random() * 4 - 2;
-            this.y += Math.random() * 4 - 2;
-        }
-    }
-    killfish() {
-        console.log("click!");
-        this.alive = false;
-        this.rotation = 0;
-        this.texture = this.deadTexture;
-    }
-}
-
 },{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gZ8P8":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "spacecraft.ff71d254.png" + "?" + Date.now();
 
@@ -37264,6 +37225,45 @@ module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "bones.
 },{"./helpers/bundle-url":"lgJ39"}],"9NaJf":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "shark.29daeb95.png" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}]},["6XGE1","h7u1C"], "h7u1C", "parcelRequire6d49")
+},{"./helpers/bundle-url":"lgJ39"}],"e8Rej":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Enemy", ()=>Enemy
+);
+var _pixiJs = require("pixi.js");
+class Enemy extends _pixiJs.Sprite {
+    alive = true;
+    constructor(game, texture, deadTexture){
+        super(texture);
+        this.game = game;
+        this.interactive = true;
+        this.buttonMode = true;
+        this.deadTexture = deadTexture;
+        this.on('pointerdown', ()=>this.killfish()
+        );
+        this.x = Math.random() * 1000;
+        this.y = Math.random() * 500;
+        this.scale.set(0.5 + Math.random() * 1.5);
+        const myfilter = new _pixiJs.filters.ColorMatrixFilter();
+        this.filters = [
+            myfilter
+        ];
+        myfilter.hue(Math.random() * 360, false);
+    }
+    update(delta) {
+        if (this.alive) {
+            this.x += Math.random() * 4 - 2;
+            this.y += Math.random() * 4 - 2;
+        }
+    }
+    killfish() {
+        console.log("click!");
+        this.alive = false;
+        this.rotation = 0;
+        this.texture = this.deadTexture;
+    }
+}
+
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["6XGE1","h7u1C"], "h7u1C", "parcelRequire6d49")
 
 //# sourceMappingURL=index.4bf444f7.js.map
