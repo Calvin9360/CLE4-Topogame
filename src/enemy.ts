@@ -15,8 +15,8 @@ export class Enemy extends PIXI.Sprite {
         this.buttonMode = true
         this.deadTexture = deadTexture
         this.on('pointerdown', () => this.killfish())
-        this.x = Math.random() * 1000
-        this.y = Math.random() * 500
+        this.x = Math.random() * 2000
+        this.y = Math.random() * 2000
         this.scale.set(0.5 +Math.random()*1.5)
         const myfilter = new PIXI.filters.ColorMatrixFilter()
         this.filters = [myfilter]
