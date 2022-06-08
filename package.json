@@ -4,7 +4,7 @@
   "description": "Dit is de github repository voor CLE4 waarbij wij een game maken met als leerdoel aardrijkskunde,\r de doelgroep zijn kinderen die topografie leren(onder de 12)",
   "main": "index.js",
   "scripts": {
-    "start": "parcel src/index.html --dist-dir docs",
+    "start": "parcel index.html --dist-dir docs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,5 +21,8 @@
   "dependencies": {
     "parcel": "^2.5.0",
     "pixi.js": "^6.3.2"
+  },
+  "devDependencies": {
+    "querystring-es3": "^0.2.1"
   }
 }
