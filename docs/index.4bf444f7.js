@@ -536,17 +536,23 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Game", ()=>Game
 );
 var _pixiJs = require("pixi.js");
-var _player = require("./player");
+var _location = require("./location");
 var _enemy = require("./enemy");
-var _spacecraftPng = require("./images/spacecraft.png");
-var _spacecraftPngDefault = parcelHelpers.interopDefault(_spacecraftPng);
+var _player = require("./player");
 var _backgroundNlPng = require("./images/background_nl.png");
 var _backgroundNlPngDefault = parcelHelpers.interopDefault(_backgroundNlPng);
+var _locationPng = require("./images/location.png");
+var _locationPngDefault = parcelHelpers.interopDefault(_locationPng);
+var _selectedPng = require("./images/selected.png");
+var _selectedPngDefault = parcelHelpers.interopDefault(_selectedPng);
 var _sharkPng = require("./images/shark.png");
 var _sharkPngDefault = parcelHelpers.interopDefault(_sharkPng);
 var _bonesPng = require("./images/bones.png");
 var _bonesPngDefault = parcelHelpers.interopDefault(_bonesPng);
+var _spacecraftPng = require("./images/spacecraft.png");
+var _spacecraftPngDefault = parcelHelpers.interopDefault(_spacecraftPng);
 class Game {
+    locations = [];
     enemies = [];
     constructor(){
         this.pixi = new _pixiJs.Application({
@@ -555,7 +561,8 @@ class Game {
         });
         document.body.appendChild(this.pixi.view);
         this.loader = new _pixiJs.Loader();
-        this.loader.add("playerTexture", _spacecraftPngDefault.default).add("backgroundTexture", _backgroundNlPngDefault.default).add("enemytexture", _sharkPngDefault.default).add("deadTexture", _bonesPngDefault.default);
+        this.loader.add("playerTexture", _spacecraftPngDefault.default).add("locationTexture", _locationPngDefault.default).add("selectedTexture", _selectedPngDefault.default).add("enemytexture", _sharkPngDefault.default).add("deadTexture", _bonesPngDefault.default).add("backgroundTexture", _backgroundNlPngDefault.default);
+        document.body.appendChild(this.pixi.view);
         this.loader.load(()=>this.doneLoading()
         );
     }
@@ -570,6 +577,12 @@ class Game {
             this.pixi.stage.addChild(enemy);
             this.enemies.push(enemy);
         }
+        //Province
+        for(let i1 = 0; i1 < 1; i1++){
+            let location = new _location.Location(this.loader.resources["locationTexture"].texture, this);
+            this.locations.push(location);
+            this.pixi.stage.addChild(location);
+        }
         //Player
         this.player = new _player.Player(this, this.loader.resources["playerTexture"].texture);
         this.pixi.stage.addChild(this.player);
@@ -580,11 +593,22 @@ class Game {
     }
     update(delta) {
         this.player.update(delta);
+        //Collision
+        for (const location of this.locations){
+            location.update(delta);
+            if (this.collision(this.player, location)) location.texture = this.loader.resources["selectedTexture"].texture;
+            else location.texture = this.loader.resources["locationTexture"].texture;
+        }
         for (let enemy of this.enemies)enemy.update(delta);
+    }
+    collision(sprite1, sprite2) {
+        const bounds1 = sprite1.getBounds();
+        const bounds2 = sprite2.getBounds();
+        return bounds1.x < bounds2.x + bounds2.width && bounds1.x + bounds1.width > bounds2.x && bounds1.y < bounds2.y + bounds2.height && bounds1.y + bounds1.height > bounds2.y;
     }
 }
 
-},{"pixi.js":"dsYej","./player":"6OTSH","./images/spacecraft.png":"gZ8P8","./images/background_nl.png":"fNGPz","./images/bones.png":"5gmO0","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./images/shark.png":"9NaJf","./enemy":"e8Rej"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","./location":"6PjY6","./enemy":"e8Rej","./player":"6OTSH","./images/background_nl.png":"fNGPz","./images/location.png":"cWIbU","./images/selected.png":"HCxBO","./images/shark.png":"9NaJf","./images/bones.png":"5gmO0","./images/spacecraft.png":"gZ8P8","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -37099,7 +37123,75 @@ function __extends(d, b) {
     return AnimatedSprite1;
 }(_sprite.Sprite);
 
-},{"@pixi/core":"7PEF8","@pixi/sprite":"9mbxh","@pixi/ticker":"8ekG7","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6OTSH":[function(require,module,exports) {
+},{"@pixi/core":"7PEF8","@pixi/sprite":"9mbxh","@pixi/ticker":"8ekG7","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6PjY6":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Location", ()=>Location
+);
+var _pixiJs = require("pixi.js");
+class Location extends _pixiJs.Sprite {
+    speed = 0;
+    constructor(texture, game){
+        super(texture);
+        this.game = game;
+        this.x = 400;
+        this.y = 400;
+        this.interactive = true;
+        this.on("pointerdown", ()=>this.onClick()
+        );
+    }
+    onClick() {
+        console.log("Click");
+        this.game.pixi.stage.removeChild(this);
+    }
+    update(delta) {
+        this.keepInScreen();
+    }
+    keepInScreen() {
+        if (this.getBounds().left > this.game.pixi.screen.right) this.x = -this.getBounds().width;
+    }
+}
+
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"e8Rej":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Enemy", ()=>Enemy
+);
+var _pixiJs = require("pixi.js");
+class Enemy extends _pixiJs.Sprite {
+    alive = true;
+    constructor(game, texture, deadTexture){
+        super(texture);
+        this.game = game;
+        this.interactive = true;
+        this.buttonMode = true;
+        this.deadTexture = deadTexture;
+        this.on('pointerdown', ()=>this.killfish()
+        );
+        this.x = Math.random() * 2000;
+        this.y = Math.random() * 2000;
+        this.scale.set(0.5 + Math.random() * 1.5);
+        const myfilter = new _pixiJs.filters.ColorMatrixFilter();
+        this.filters = [
+            myfilter
+        ];
+        myfilter.hue(Math.random() * 360, false);
+    }
+    update(delta) {
+        if (this.alive) {
+            this.x += Math.random() * 4 - 2;
+            this.y += Math.random() * 4 - 2;
+        }
+    }
+    killfish() {
+        console.log("click!");
+        this.alive = false;
+        this.rotation = 0;
+        this.texture = this.deadTexture;
+    }
+}
+
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6OTSH":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Player", ()=>Player
@@ -37179,8 +37271,8 @@ class Player extends _pixiJs.Sprite {
     }
 }
 
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gZ8P8":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "spacecraft.ff71d254.png" + "?" + Date.now();
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fNGPz":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "background_nl.451e03f2.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}],"lgJ39":[function(require,module,exports) {
 "use strict";
@@ -37216,54 +37308,21 @@ exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
 exports.getOrigin = getOrigin;
 
-},{}],"fNGPz":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "background_nl.451e03f2.png" + "?" + Date.now();
+},{}],"cWIbU":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "location.ac3ad6ec.png" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}],"5gmO0":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "bones.df4825d2.png" + "?" + Date.now();
+},{"./helpers/bundle-url":"lgJ39"}],"HCxBO":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "selected.191d7da9.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}],"9NaJf":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "shark.29daeb95.png" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}],"e8Rej":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "Enemy", ()=>Enemy
-);
-var _pixiJs = require("pixi.js");
-class Enemy extends _pixiJs.Sprite {
-    alive = true;
-    constructor(game, texture, deadTexture){
-        super(texture);
-        this.game = game;
-        this.interactive = true;
-        this.buttonMode = true;
-        this.deadTexture = deadTexture;
-        this.on('pointerdown', ()=>this.killfish()
-        );
-        this.x = Math.random() * 2000;
-        this.y = Math.random() * 2000;
-        this.scale.set(0.5 + Math.random() * 1.5);
-        const myfilter = new _pixiJs.filters.ColorMatrixFilter();
-        this.filters = [
-            myfilter
-        ];
-        myfilter.hue(Math.random() * 360, false);
-    }
-    update(delta) {
-        if (this.alive) {
-            this.x += Math.random() * 4 - 2;
-            this.y += Math.random() * 4 - 2;
-        }
-    }
-    killfish() {
-        console.log("click!");
-        this.alive = false;
-        this.rotation = 0;
-        this.texture = this.deadTexture;
-    }
-}
+},{"./helpers/bundle-url":"lgJ39"}],"5gmO0":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "bones.df4825d2.png" + "?" + Date.now();
 
-},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["6XGE1","h7u1C"], "h7u1C", "parcelRequire6d49")
+},{"./helpers/bundle-url":"lgJ39"}],"gZ8P8":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "spacecraft.ff71d254.png" + "?" + Date.now();
+
+},{"./helpers/bundle-url":"lgJ39"}]},["6XGE1","h7u1C"], "h7u1C", "parcelRequire6d49")
 
 //# sourceMappingURL=index.4bf444f7.js.map
