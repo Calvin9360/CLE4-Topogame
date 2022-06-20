@@ -18,7 +18,7 @@ import backgroundImage from "./images/background_nl.png";
 // import locationImage from "./images/location_zeeland.png";
 import locationImage from "./images/location_zuid-holland.png";
 import enemyImage from "./images/spacepirate.png";
-import deadImage from "./images/bones.png";
+import destroyedImage from "./images/spacepirate_destroyed.png";
 import playerImage from "./images/spacecraft.png";
 
 
@@ -44,7 +44,7 @@ export class Game {
             .add("backgroundTexture", backgroundImage)
             .add("locationTexture", locationImage)
             .add("enemytexture", enemyImage)
-            .add("deadTexture", deadImage)
+            .add("destroyedTexture", destroyedImage)
             .add("playerTexture", playerImage);
         document.body.appendChild(this.pixi.view)
 
@@ -68,7 +68,7 @@ export class Game {
 
         //Enemy
         for (let i = 0; i < 10; i++) {
-            let enemy = new Enemy(this, this.loader.resources["enemytexture"].texture!, this.loader.resources["deadTexture"].texture!);
+            let enemy = new Enemy(this, this.loader.resources["enemytexture"].texture!, this.loader.resources["destroyedTexture"].texture!);
             this.pixi.stage.addChild(enemy);
             this.enemies.push(enemy);
         }
@@ -107,11 +107,15 @@ export class Game {
         //
         for (let enemy of this.enemies) {
             if (this.collision(enemy, this.player)) {
-                enemy.texture = this.loader.resources["deadTexture"].texture!;
+                enemy.texture = this.loader.resources["destroyedTexture"].texture!;
+                const color_none = new PIXI.filters.ColorMatrixFilter()
+                enemy.filters = [color_none]
+                color_none.hue(0, false)
               }
             enemy.update(delta);
         }
     }
+
 
     collision(sprite1: PIXI.Sprite, sprite2: PIXI.Sprite) {
       const bounds1 = sprite1.getBounds();

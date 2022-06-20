@@ -1,28 +1,20 @@
 {
-  "name": "CLE4-Topogame",
-  "version": "1.0.0",
-  "description": "Dit is de github repository voor CLE4 waarbij wij een game maken met als leerdoel aardrijkskunde,\r de doelgroep zijn kinderen die topografie leren(onder de 12)",
-  "main": "index.js",
-  "scripts": {
-    "start": "parcel index.html --dist-dir docs",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Calvin9360/CLE4-Topogame.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Calvin9360/CLE4-Topogame/issues"
-  },
-  "homepage": "https://github.com/Calvin9360/CLE4-Topogame#readme",
-  "dependencies": {
-    "parcel": "^2.5.0",
-    "pixi.js": "^6.3.2"
-  },
-  "devDependencies": {
-    "querystring-es3": "^0.2.1"
-  }
+    "name": "pixi-startproject",
+    "version": "1.0.0",
+    "description": "Dit is een startproject voor het werken met PixiJS, Typescript en OOP. Je kan deze repository downloaden en vervolgens installeren met:",
+    "scripts": {
+        "start": "parcel src/index.html --dist-dir docs",
+        "build": "parcel build src/index.html --dist-dir docs --public-url ./"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "pixi.js": "^6.3.0"
+    },
+    "devDependencies": {
+        "parcel": "^2.4.0",
+        "querystring-es3": "^0.2.1",
+        "typescript": "^4.6.2"
+    }
 }

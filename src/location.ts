@@ -17,6 +17,7 @@ export class Location extends PIXI.Sprite {
         329, 1172, // Zeeland
         501, 860, // Zuid-Holland
     ];
+    endText: PIXI.Text;
     game: Game;
 
     constructor(texture: PIXI.Texture, game: Game) {
@@ -29,13 +30,24 @@ export class Location extends PIXI.Sprite {
       }
   
       this.interactive = true;
-      // this.on("pointerdown", () => this.onClick());
+      this.on("pointerdown", () => this.onClick());
     }
   
     //Click
-    // private onClick() {
-    //   console.log("Click");
-    // }
+    private onClick() {
+      console.log("Click");
+      const style = new PIXI.TextStyle({
+        fontFamily: 'Silkscreen',
+        fontSize: 40,
+        fontWeight: 'bold',
+        fill: ['#1e1e1e']
+      });
+
+      this.endText = new PIXI.Text(`Goed`, style);
+      this.endText.x = 0;
+      this.endText.y = 0;
+      this.addChild(this.endText);
+    }
   
     public update(delta: number) {
     }

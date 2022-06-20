@@ -142,7 +142,7 @@
       this[globalName] = mainExports;
     }
   }
-})({"6XGE1":[function(require,module,exports) {
+})({"5fJJd":[function(require,module,exports) {
 "use strict";
 var HMR_HOST = null;
 var HMR_PORT = null;
@@ -223,7 +223,7 @@ function _arrayLikeToArray(arr, len) {
     for(var i = 0, arr2 = new Array(len); i < len; i++)arr2[i] = arr[i];
     return arr2;
 }
-/* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE, chrome, browser */ /*::
+/* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE */ /*::
 import type {
   HMRAsset,
   HMRMessage,
@@ -250,18 +250,11 @@ interface ParcelModule {
     _disposeCallbacks: Array<(mixed) => void>,
   |};
 }
-interface ExtensionContext {
-  runtime: {|
-    reload(): void,
-  |};
-}
 declare var module: {bundle: ParcelRequire, ...};
 declare var HMR_HOST: string;
 declare var HMR_PORT: string;
 declare var HMR_ENV_HASH: string;
 declare var HMR_SECURE: boolean;
-declare var chrome: ExtensionContext;
-declare var browser: ExtensionContext;
 */ var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
 function Module(moduleName) {
@@ -316,12 +309,7 @@ if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
                     var id = assetsToAccept[i][1];
                     if (!acceptedAssets[id]) hmrAcceptRun(assetsToAccept[i][0], id);
                 }
-            } else if ('reload' in location) location.reload();
-            else {
-                // Web extension context
-                var ext = typeof chrome === 'undefined' ? typeof browser === 'undefined' ? null : browser : chrome;
-                if (ext && ext.runtime && ext.runtime.reload) ext.runtime.reload();
-            }
+            } else window.location.reload();
         }
         if (data.type === 'error') {
             // Log parcel errors to console
@@ -415,7 +403,7 @@ function reloadCSS() {
             var href = links[i].getAttribute('href');
             var hostname = getHostname();
             var servedFromHMRServer = hostname === 'localhost' ? new RegExp('^(https?:\\/\\/(0.0.0.0|127.0.0.1)|localhost):' + getPort()).test(href) : href.indexOf(hostname + ':' + getPort());
-            var absolute = /^https?:\/\//i.test(href) && href.indexOf(location.origin) !== 0 && !servedFromHMRServer;
+            var absolute = /^https?:\/\//i.test(href) && href.indexOf(window.location.origin) !== 0 && !servedFromHMRServer;
             if (!absolute) updateLink(links[i]);
         }
         cssTimeout = null;
@@ -557,8 +545,8 @@ var _locationZuidHollandPng = require("./images/location_zuid-holland.png");
 var _locationZuidHollandPngDefault = parcelHelpers.interopDefault(_locationZuidHollandPng);
 var _spacepiratePng = require("./images/spacepirate.png");
 var _spacepiratePngDefault = parcelHelpers.interopDefault(_spacepiratePng);
-var _bonesPng = require("./images/bones.png");
-var _bonesPngDefault = parcelHelpers.interopDefault(_bonesPng);
+var _spacepirateDestroyedPng = require("./images/spacepirate_destroyed.png");
+var _spacepirateDestroyedPngDefault = parcelHelpers.interopDefault(_spacepirateDestroyedPng);
 var _spacecraftPng = require("./images/spacecraft.png");
 var _spacecraftPngDefault = parcelHelpers.interopDefault(_spacecraftPng);
 class Game {
@@ -571,7 +559,7 @@ class Game {
         });
         document.body.appendChild(this.pixi.view);
         this.loader = new _pixiJs.Loader();
-        this.loader.add("backgroundTexture", _backgroundNlPngDefault.default).add("locationTexture", _locationZuidHollandPngDefault.default).add("enemytexture", _spacepiratePngDefault.default).add("deadTexture", _bonesPngDefault.default).add("playerTexture", _spacecraftPngDefault.default);
+        this.loader.add("backgroundTexture", _backgroundNlPngDefault.default).add("locationTexture", _locationZuidHollandPngDefault.default).add("enemytexture", _spacepiratePngDefault.default).add("destroyedTexture", _spacepirateDestroyedPngDefault.default).add("playerTexture", _spacecraftPngDefault.default);
         document.body.appendChild(this.pixi.view);
         this.loader.load(()=>this.doneLoading()
         );
@@ -590,7 +578,7 @@ class Game {
         }
         //Enemy
         for(let i1 = 0; i1 < 10; i1++){
-            let enemy = new _enemy.Enemy(this, this.loader.resources["enemytexture"].texture, this.loader.resources["deadTexture"].texture);
+            let enemy = new _enemy.Enemy(this, this.loader.resources["enemytexture"].texture, this.loader.resources["destroyedTexture"].texture);
             this.pixi.stage.addChild(enemy);
             this.enemies.push(enemy);
         }
@@ -620,7 +608,14 @@ class Game {
         }
         //
         for (let enemy of this.enemies){
-            if (this.collision(enemy, this.player)) enemy.texture = this.loader.resources["deadTexture"].texture;
+            if (this.collision(enemy, this.player)) {
+                enemy.texture = this.loader.resources["destroyedTexture"].texture;
+                const color_none = new _pixiJs.filters.ColorMatrixFilter();
+                enemy.filters = [
+                    color_none
+                ];
+                color_none.hue(0, false);
+            }
             enemy.update(delta);
         }
     }
@@ -631,7 +626,7 @@ class Game {
     }
 }
 
-},{"pixi.js":"dsYej","./location":"6PjY6","./enemy":"e8Rej","./player":"6OTSH","./interface":"5yLgp","./images/background_nl.png":"fNGPz","./images/location_zuid-holland.png":"1jX2W","./images/spacepirate.png":"2FE4X","./images/bones.png":"5gmO0","./images/spacecraft.png":"gZ8P8","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","./location":"6PjY6","./enemy":"e8Rej","./player":"6OTSH","./interface":"5yLgp","./images/background_nl.png":"fNGPz","./images/location_zuid-holland.png":"1jX2W","./images/spacepirate.png":"2FE4X","./images/spacepirate_destroyed.png":"abLa8","./images/spacecraft.png":"gZ8P8","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -641,8 +636,8 @@ parcelHelpers.export(exports, "VERSION", ()=>VERSION
 parcelHelpers.export(exports, "filters", ()=>filters
 );
 /*!
- * pixi.js - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * pixi.js - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * pixi.js is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -730,7 +725,7 @@ _app.Application.registerPlugin(_loaders.AppLoaderPlugin);
  * @memberof PIXI
  * @name VERSION
  * @type {string}
- */ var VERSION = '6.3.2';
+ */ var VERSION = '6.3.0';
 /**
  * @namespace PIXI
  */ /**
@@ -772,8 +767,8 @@ _app.Application.registerPlugin(_loaders.AppLoaderPlugin);
 },{"@pixi/polyfill":"gU7rq","@pixi/utils":"2DWCn","@pixi/accessibility":"8zzic","@pixi/interaction":"keS9A","@pixi/app":"7E4Vp","@pixi/core":"7PEF8","@pixi/extract":"ciAJR","@pixi/loaders":"1zEsZ","@pixi/compressed-textures":"bhu0Y","@pixi/particle-container":"77Uaw","@pixi/prepare":"96jlA","@pixi/spritesheet":"646nX","@pixi/sprite-tiling":"1ZWzM","@pixi/text-bitmap":"7zGmD","@pixi/ticker":"8ekG7","@pixi/filter-alpha":"55hl8","@pixi/filter-blur":"6FaSJ","@pixi/filter-color-matrix":"7FXp5","@pixi/filter-displacement":"cwIus","@pixi/filter-fxaa":"1E7AH","@pixi/filter-noise":"iIZn9","@pixi/mixin-cache-as-bitmap":"ggpR7","@pixi/mixin-get-child-by-name":"gorRP","@pixi/mixin-get-global-position":"1c09v","@pixi/constants":"jYAj1","@pixi/display":"b9G7r","@pixi/graphics":"1TAuU","@pixi/math":"dbvNN","@pixi/mesh":"1C15z","@pixi/mesh-extras":"apqYR","@pixi/runner":"byQZp","@pixi/sprite":"9mbxh","@pixi/sprite-animated":"bS7dO","@pixi/text":"NtIz8","@pixi/settings":"01wFC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gU7rq":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 /*!
- * @pixi/polyfill - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/polyfill - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/polyfill is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -1271,8 +1266,8 @@ parcelHelpers.export(exports, "uid", ()=>uid
 parcelHelpers.export(exports, "url", ()=>url
 );
 /*!
- * @pixi/utils - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/utils - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/utils is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -1330,7 +1325,7 @@ var _earcutDefault = parcelHelpers.interopDefault(_earcut);
  * @default false
  */ _settings.settings.FAIL_IF_MAJOR_PERFORMANCE_CAVEAT = false;
 var saidHello = false;
-var VERSION = '6.3.2';
+var VERSION = '6.3.0';
 /**
  * Skips the hello message of renderers that are created after this is run.
  *
@@ -1708,9 +1703,9 @@ var cssColorNames = {
  * @return {number[]} An array representing the [R, G, B] of the color where all values are floats.
  */ function hex2rgb(hex, out) {
     if (out === void 0) out = [];
-    out[0] = (hex >> 16 & 0xFF) / 255;
-    out[1] = (hex >> 8 & 0xFF) / 255;
-    out[2] = (hex & 0xFF) / 255;
+    out[0] = (hex >> 16 & 255) / 255;
+    out[1] = (hex >> 8 & 255) / 255;
+    out[2] = (hex & 255) / 255;
     return out;
 }
 /**
@@ -1835,11 +1830,11 @@ var cssColorNames = {
  * @param {number} alpha - floating point alpha (0.0-1.0)
  * @returns {number} tint multiplied by alpha
  */ function premultiplyTint(tint, alpha) {
-    if (alpha === 1.0) return (alpha * 255 << 24) + tint;
-    if (alpha === 0.0) return 0;
-    var R = tint >> 16 & 0xFF;
-    var G = tint >> 8 & 0xFF;
-    var B = tint & 0xFF;
+    if (alpha === 1) return (alpha * 255 << 24) + tint;
+    if (alpha === 0) return 0;
+    var R = tint >> 16 & 255;
+    var G = tint >> 8 & 255;
+    var B = tint & 255;
     R = R * alpha + 0.5 | 0;
     G = G * alpha + 0.5 | 0;
     B = B * alpha + 0.5 | 0;
@@ -1857,9 +1852,9 @@ var cssColorNames = {
  * @returns {Float32Array} vec4 rgba
  */ function premultiplyTintToRgba(tint, alpha, out, premultiply) {
     out = out || new Float32Array(4);
-    out[0] = (tint >> 16 & 0xFF) / 255.0;
-    out[1] = (tint >> 8 & 0xFF) / 255.0;
-    out[2] = (tint & 0xFF) / 255.0;
+    out[0] = (tint >> 16 & 255) / 255;
+    out[1] = (tint >> 8 & 255) / 255;
+    out[2] = (tint & 255) / 255;
     if (premultiply || premultiply === undefined) {
         out[0] *= alpha;
         out[1] *= alpha;
@@ -1977,15 +1972,15 @@ function interleaveTypedArrays(arrays, sizes) {
  * @param {number} v - input value
  * @return {number} logarithm base 2
  */ function log2(v) {
-    var r = (v > 0xFFFF ? 1 : 0) << 4;
+    var r = (v > 65535 ? 1 : 0) << 4;
     v >>>= r;
-    var shift = (v > 0xFF ? 1 : 0) << 3;
+    var shift = (v > 255 ? 1 : 0) << 3;
     v >>>= shift;
     r |= shift;
-    shift = (v > 0xF ? 1 : 0) << 2;
+    shift = (v > 15 ? 1 : 0) << 2;
     v >>>= shift;
     r |= shift;
-    shift = (v > 0x3 ? 1 : 0) << 1;
+    shift = (v > 3 ? 1 : 0) << 1;
     v >>>= shift;
     r |= shift;
     return r | v >> 1;
@@ -2321,8 +2316,8 @@ parcelHelpers.export(exports, "isMobile", ()=>isMobile
 parcelHelpers.export(exports, "settings", ()=>settings
 );
 /*!
- * @pixi/settings - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/settings - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/settings is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -2375,8 +2370,8 @@ var isMobile = _ismobilejsDefault.default(globalThis.navigator);
     return !isMobile.apple.device;
 }
 /*!
- * @pixi/constants - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/constants - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/constants is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -2972,7 +2967,7 @@ var isMobile = _ismobilejsDefault.default(globalThis.navigator);
         view: null,
         antialias: false,
         autoDensity: false,
-        backgroundColor: 0x000000,
+        backgroundColor: 0,
         backgroundAlpha: 1,
         useContextAlpha: true,
         clearBeforeRender: true,
@@ -3813,10 +3808,10 @@ var global = arguments[3];
         var output = [], counter = 0, length = string.length, value, extra;
         while(counter < length){
             value = string.charCodeAt(counter++);
-            if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
+            if (value >= 55296 && value <= 56319 && counter < length) {
                 // high surrogate, and there is a next character
                 extra = string.charCodeAt(counter++);
-                if ((extra & 0xFC00) == 0xDC00) output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
+                if ((extra & 64512) == 56320) output.push(((value & 1023) << 10) + (extra & 1023) + 65536);
                 else {
                     // unmatched surrogate; only append this code unit, in case the next
                     // code unit is the high surrogate of a surrogate pair
@@ -3837,10 +3832,10 @@ var global = arguments[3];
 	 */ function ucs2encode(array) {
         return map(array, function(value) {
             var output = '';
-            if (value > 0xFFFF) {
-                value -= 0x10000;
-                output += stringFromCharCode(value >>> 10 & 0x3FF | 0xD800);
-                value = 0xDC00 | value & 0x3FF;
+            if (value > 65535) {
+                value -= 65536;
+                output += stringFromCharCode(value >>> 10 & 1023 | 55296);
+                value = 56320 | value & 1023;
             }
             output += stringFromCharCode(value);
             return output;
@@ -3902,7 +3897,7 @@ var global = arguments[3];
         if (basic < 0) basic = 0;
         for(j = 0; j < basic; ++j){
             // if it's not a basic code point
-            if (input.charCodeAt(j) >= 0x80) error('not-basic');
+            if (input.charCodeAt(j) >= 128) error('not-basic');
             output.push(input.charCodeAt(j));
         }
         // Main decoding loop: start just after the last delimiter if any basic code
@@ -3955,7 +3950,7 @@ var global = arguments[3];
         // Handle the basic code points
         for(j = 0; j < inputLength; ++j){
             currentValue = input[j];
-            if (currentValue < 0x80) output.push(stringFromCharCode(currentValue));
+            if (currentValue < 128) output.push(stringFromCharCode(currentValue));
         }
         handledCPCount = basicLength = output.length;
         // `handledCPCount` is the number of code points that have been handled;
@@ -4253,8 +4248,8 @@ parcelHelpers.export(exports, "TYPES", ()=>TYPES
 parcelHelpers.export(exports, "WRAP_MODES", ()=>WRAP_MODES
 );
 /*!
- * @pixi/constants - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/constants - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/constants is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -5306,14 +5301,14 @@ function zOrder(x, y, minX, minY, invSize) {
     // coords are transformed into non-negative 15-bit integer range
     x = 32767 * (x - minX) * invSize;
     y = 32767 * (y - minY) * invSize;
-    x = (x | x << 8) & 0x00FF00FF;
-    x = (x | x << 4) & 0x0F0F0F0F;
-    x = (x | x << 2) & 0x33333333;
-    x = (x | x << 1) & 0x55555555;
-    y = (y | y << 8) & 0x00FF00FF;
-    y = (y | y << 4) & 0x0F0F0F0F;
-    y = (y | y << 2) & 0x33333333;
-    y = (y | y << 1) & 0x55555555;
+    x = (x | x << 8) & 16711935;
+    x = (x | x << 4) & 252645135;
+    x = (x | x << 2) & 858993459;
+    x = (x | x << 1) & 1431655765;
+    y = (y | y << 8) & 16711935;
+    y = (y | y << 4) & 252645135;
+    y = (y | y << 2) & 858993459;
+    y = (y | y << 1) & 1431655765;
     return x | y << 1;
 }
 // find the leftmost node of a polygon ring
@@ -5487,8 +5482,8 @@ parcelHelpers.export(exports, "AccessibilityManager", ()=>AccessibilityManager
 parcelHelpers.export(exports, "accessibleTarget", ()=>accessibleTarget
 );
 /*!
- * @pixi/accessibility - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/accessibility - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/accessibility is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -5943,8 +5938,8 @@ parcelHelpers.export(exports, "DisplayObject", ()=>DisplayObject
 parcelHelpers.export(exports, "TemporaryDisplayObject", ()=>TemporaryDisplayObject
 );
 /*!
- * @pixi/display - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/display - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/display is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -7071,8 +7066,8 @@ function __extends(d, b) {
  * @method displayObjectUpdateTransform
  */ DisplayObject.prototype.displayObjectUpdateTransform = DisplayObject.prototype.updateTransform;
 /*!
- * @pixi/constants - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/constants - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/constants is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -8065,8 +8060,8 @@ parcelHelpers.export(exports, "Transform", ()=>Transform
 parcelHelpers.export(exports, "groupD8", ()=>groupD8
 );
 /*!
- * @pixi/math - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/math - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/math is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -9627,8 +9622,8 @@ parcelHelpers.export(exports, "InteractionTrackingData", ()=>InteractionTracking
 parcelHelpers.export(exports, "interactiveTarget", ()=>interactiveTarget
 );
 /*!
- * @pixi/interaction - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/interaction - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/interaction is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -10804,7 +10799,7 @@ var hitTestEvent = {
             top: 0
         };
         else rect = this.interactionDOMElement.getBoundingClientRect();
-        var resolutionMultiplier = 1.0 / this.resolution;
+        var resolutionMultiplier = 1 / this.resolution;
         point.x = (x - rect.left) * (this.interactionDOMElement.width / rect.width) * resolutionMultiplier;
         point.y = (y - rect.top) * (this.interactionDOMElement.height / rect.height) * resolutionMultiplier;
     };
@@ -11258,8 +11253,8 @@ parcelHelpers.export(exports, "TickerPlugin", ()=>TickerPlugin
 parcelHelpers.export(exports, "UPDATE_PRIORITY", ()=>UPDATE_PRIORITY
 );
 /*!
- * @pixi/ticker - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/ticker - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/ticker is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -11896,8 +11891,8 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Application", ()=>Application
 );
 /*!
- * @pixi/app - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/app - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/app is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -12275,7 +12270,7 @@ parcelHelpers.export(exports, "createUBOElements", ()=>createUBOElements
 );
 parcelHelpers.export(exports, "defaultFilterVertex", ()=>defaultFilterVertex
 );
-parcelHelpers.export(exports, "defaultVertex", ()=>defaultVertex$1
+parcelHelpers.export(exports, "defaultVertex", ()=>defaultVertex$2
 );
 parcelHelpers.export(exports, "generateProgram", ()=>generateProgram
 );
@@ -12292,8 +12287,8 @@ parcelHelpers.export(exports, "systems", ()=>systems
 parcelHelpers.export(exports, "uniformParsers", ()=>uniformParsers
 );
 /*!
- * @pixi/core - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/core - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/core is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -13363,6 +13358,7 @@ var defaultBufferOptions = {
         baseTexture.target = _constants.TARGETS.TEXTURE_CUBE_MAP;
     };
     CubeResource1.prototype.addBaseTextureAt = function(baseTexture, index, linkBaseTexture) {
+        if (linkBaseTexture === undefined) linkBaseTexture = this.linkBaseTexture;
         if (!this.items[index]) throw new Error("Index " + index + " is out of bounds");
         if (!this.linkBaseTexture || baseTexture.parentTextureArray || Object.keys(baseTexture._glTextures).length > 0) {
             // copy mode
@@ -14309,15 +14305,6 @@ var _resources = {
 }();
 var DEFAULT_UVS = new TextureUvs();
 /**
- * Used to remove listeners from WHITE and EMPTY Textures
- * @ignore
- */ function removeAllHandlers(tex) {
-    tex.destroy = function _emptyDestroy() {};
-    tex.on = function _emptyOn() {};
-    tex.once = function _emptyOnce() {};
-    tex.emit = function _emptyEmit() {};
-}
-/**
  * A texture stores the information that represents an image or part of an image.
  *
  * It cannot be added to the display list directly; instead use it as the texture for a Sprite.
@@ -14459,7 +14446,7 @@ var DEFAULT_UVS = new TextureUvs();
      * The source can be - frame id, image url, video url, canvas element, video element, base texture
      *
      * @param {string|HTMLImageElement|HTMLCanvasElement|HTMLVideoElement|PIXI.BaseTexture} source -
-     *        Source or array of sources to create texture from
+     *        Source to create texture from
      * @param options - See {@link PIXI.BaseTexture}'s constructor for options.
      * @param {string} [options.pixiIdPrefix=pixiid] - If a source has no id, this is the prefix of the generated id
      * @param {boolean} [strict] - Enforce strict-mode, see {@link PIXI.settings.STRICT_TEXTURE_CACHE}.
@@ -14505,7 +14492,7 @@ var DEFAULT_UVS = new TextureUvs();
      * it does a better job of handling failed URLs more effectively. This also ignores
      * `PIXI.settings.STRICT_TEXTURE_CACHE`. Works for Videos, SVGs, Images.
      *
-     * @param url - The remote URL or array of URLs to load.
+     * @param url - The remote URL to load.
      * @param options - Optional options to include
      * @return - A Promise that resolves to a Texture.
      */ Texture1.fromURL = function(url, options) {
@@ -14677,44 +14664,43 @@ var DEFAULT_UVS = new TextureUvs();
     /** Utility function for BaseTexture|Texture cast. */ Texture1.prototype.castToBaseTexture = function() {
         return this.baseTexture;
     };
-    Object.defineProperty(Texture1, "EMPTY", {
-        /**
-         * An empty texture, used often to not have to create multiple empty textures.
-         * Can not be destroyed.
-         */ get: function() {
-            if (!Texture1._EMPTY) {
-                Texture1._EMPTY = new Texture1(new BaseTexture());
-                removeAllHandlers(Texture1._EMPTY);
-                removeAllHandlers(Texture1._EMPTY.baseTexture);
-            }
-            return Texture1._EMPTY;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Texture1, "WHITE", {
-        /**
-         * A white texture of 16x16 size, used for graphics and other things
-         * Can not be destroyed.
-         */ get: function() {
-            if (!Texture1._WHITE) {
-                var canvas = document.createElement('canvas');
-                var context1 = canvas.getContext('2d');
-                canvas.width = 16;
-                canvas.height = 16;
-                context1.fillStyle = 'white';
-                context1.fillRect(0, 0, 16, 16);
-                Texture1._WHITE = new Texture1(new BaseTexture(new CanvasResource(canvas)));
-                removeAllHandlers(Texture1._WHITE);
-                removeAllHandlers(Texture1._WHITE.baseTexture);
-            }
-            return Texture1._WHITE;
-        },
-        enumerable: false,
-        configurable: true
-    });
     return Texture1;
 }(_utils.EventEmitter);
+function createWhiteTexture() {
+    var canvas = document.createElement('canvas');
+    canvas.width = 16;
+    canvas.height = 16;
+    var context1 = canvas.getContext('2d');
+    context1.fillStyle = 'white';
+    context1.fillRect(0, 0, 16, 16);
+    return new Texture(new BaseTexture(new CanvasResource(canvas)));
+}
+function removeAllHandlers(tex) {
+    tex.destroy = function _emptyDestroy() {};
+    tex.on = function _emptyOn() {};
+    tex.once = function _emptyOnce() {};
+    tex.emit = function _emptyEmit() {};
+}
+/**
+ * An empty texture, used often to not have to create multiple empty textures.
+ * Can not be destroyed.
+ *
+ * @static
+ * @constant
+ * @member {PIXI.Texture}
+ */ Texture.EMPTY = new Texture(new BaseTexture());
+removeAllHandlers(Texture.EMPTY);
+removeAllHandlers(Texture.EMPTY.baseTexture);
+/**
+ * A white texture of 16x16 size, used for graphics and other things
+ * Can not be destroyed.
+ *
+ * @static
+ * @constant
+ * @member {PIXI.Texture}
+ */ Texture.WHITE = createWhiteTexture();
+removeAllHandlers(Texture.WHITE);
+removeAllHandlers(Texture.WHITE.baseTexture);
 /**
  * A RenderTexture is a special texture that allows any PixiJS display object to be rendered to it.
  *
@@ -14885,13 +14871,13 @@ var DEFAULT_UVS = new TextureUvs();
         if (resolution === void 0) resolution = 1;
         if (multisample === void 0) multisample = _constants.MSAA_QUALITY.NONE;
         var key;
-        minWidth = Math.ceil(minWidth * resolution - 1e-6);
-        minHeight = Math.ceil(minHeight * resolution - 1e-6);
+        minWidth = Math.ceil(minWidth * resolution - 0.000001);
+        minHeight = Math.ceil(minHeight * resolution - 0.000001);
         if (!this.enableFullScreen || minWidth !== this._pixelsWidth || minHeight !== this._pixelsHeight) {
             minWidth = _utils.nextPow2(minWidth);
             minHeight = _utils.nextPow2(minHeight);
-            key = ((minWidth & 0xFFFF) << 16 | minHeight & 0xFFFF) >>> 0;
-            if (multisample > 1) key += multisample * 0x100000000;
+            key = ((minWidth & 65535) << 16 | minHeight & 65535) >>> 0;
+            if (multisample > 1) key += multisample * 4294967296;
         } else key = multisample > 1 ? -multisample : -1;
         if (!this.texturePool[key]) this.texturePool[key] = [];
         var renderTexture = this.texturePool[key].pop();
@@ -15014,7 +15000,7 @@ var DEFAULT_UVS = new TextureUvs();
     };
     return Attribute1;
 }();
-var UID$4 = 0;
+var UID = 0;
 /**
  * A wrapper for data so that it can be used and uploaded by WebGL
  *
@@ -15032,7 +15018,7 @@ var UID$4 = 0;
         this._updateID = 0;
         this.index = index;
         this.static = _static;
-        this.id = UID$4++;
+        this.id = UID++;
         this.disposeRunner = new _runner.Runner('disposeBuffer');
     }
     // TODO could explore flagging only a partial upload?
@@ -15079,7 +15065,7 @@ var UID$4 = 0;
     };
     return Buffer1;
 }();
-/* eslint-disable object-shorthand */ var map$1 = {
+/* eslint-disable object-shorthand */ var map = {
     Float32Array: Float32Array,
     Uint32Array: Uint32Array,
     Int32Array: Int32Array,
@@ -15100,7 +15086,7 @@ function interleaveTypedArrays(arrays, sizes) {
         var size = sizes[i];
         var array = arrays[i];
         var type = _utils.getBufferType(array);
-        if (!views[type]) views[type] = new map$1[type](buffer);
+        if (!views[type]) views[type] = new map[type](buffer);
         out = views[type];
         for(var j = 0; j < array.length; j++){
             var indexStart = (j / size | 0) * stride + littleOffset;
@@ -15111,13 +15097,13 @@ function interleaveTypedArrays(arrays, sizes) {
     }
     return new Float32Array(buffer);
 }
-var byteSizeMap$1 = {
+var byteSizeMap = {
     5126: 4,
     5123: 2,
     5121: 1
 };
-var UID$3 = 0;
-/* eslint-disable object-shorthand */ var map = {
+var UID$1 = 0;
+/* eslint-disable object-shorthand */ var map$1 = {
     Float32Array: Float32Array,
     Uint32Array: Uint32Array,
     Int32Array: Int32Array,
@@ -15152,7 +15138,7 @@ var UID$3 = 0;
         this.indexBuffer = null;
         this.attributes = attributes;
         this.glVertexArrayObjects = {};
-        this.id = UID$3++;
+        this.id = UID$1++;
         this.instanced = false;
         this.instanceCount = 1;
         this.disposeRunner = new _runner.Runner('disposeGeometry');
@@ -15256,7 +15242,7 @@ var UID$3 = 0;
             var attribute = this.attributes[i];
             var buffer = this.buffers[attribute.buffer];
             arrays.push(buffer.data);
-            sizes.push(attribute.size * byteSizeMap$1[attribute.type] / 4);
+            sizes.push(attribute.size * byteSizeMap[attribute.type] / 4);
             attribute.buffer = 0;
         }
         interleavedBuffer.data = interleaveTypedArrays(arrays, sizes);
@@ -15328,7 +15314,7 @@ var UID$3 = 0;
         // build the correct size arrays..
         for(var i = 0; i < geometry.buffers.length; i++){
             // TODO types!
-            arrays[i] = new map[_utils.getBufferType(geometry.buffers[i].data)](sizes[i]);
+            arrays[i] = new map$1[_utils.getBufferType(geometry.buffers[i].data)](sizes[i]);
             geometryOut.buffers[i] = new Buffer(arrays[i]);
         }
         // pass to set data..
@@ -15355,7 +15341,7 @@ var UID$3 = 0;
             // figure out the stride of one buffer..
             for(var i in geometry.attributes){
                 var attribute = geometry.attributes[i];
-                if ((attribute.buffer | 0) === bufferIndexToCount) stride += attribute.size * byteSizeMap$1[attribute.type] / 4;
+                if ((attribute.buffer | 0) === bufferIndexToCount) stride += attribute.size * byteSizeMap[attribute.type] / 4;
             }
             // time to off set all indexes..
             for(var i = 0; i < geometries.length; i++){
@@ -15602,7 +15588,7 @@ var tempPoints = [
     new _math.Point(),
     new _math.Point()
 ];
-var tempMatrix$2 = new _math.Matrix();
+var tempMatrix = new _math.Matrix();
 /**
  * System plugin to the renderer to manage filters.
  *
@@ -15695,18 +15681,11 @@ var tempMatrix$2 = new _math.Matrix();
         state.target = target;
         state.sourceFrame.copyFrom(target.filterArea || target.getBounds(true));
         state.sourceFrame.pad(padding);
-        var sourceFrameProjected = this.tempRect.copyFrom(renderTextureSystem.sourceFrame);
-        // Project source frame into world space (if projection is applied)
-        if (renderer.projection.transform) this.transformAABB(tempMatrix$2.copyFrom(renderer.projection.transform).invert(), sourceFrameProjected);
         if (autoFit) {
+            var sourceFrameProjected = this.tempRect.copyFrom(renderTextureSystem.sourceFrame);
+            // Project source frame into world space (if projection is applied)
+            if (renderer.projection.transform) this.transformAABB(tempMatrix.copyFrom(renderer.projection.transform).invert(), sourceFrameProjected);
             state.sourceFrame.fit(sourceFrameProjected);
-            if (state.sourceFrame.width <= 0 || state.sourceFrame.height <= 0) {
-                state.sourceFrame.width = 0;
-                state.sourceFrame.height = 0;
-            }
-        } else if (!state.sourceFrame.intersects(sourceFrameProjected)) {
-            state.sourceFrame.width = 0;
-            state.sourceFrame.height = 0;
         }
         // Round sourceFrame in screen space based on render-texture.
         this.roundFrame(state.sourceFrame, renderTextureSystem.current ? renderTextureSystem.current.resolution : renderer.resolution, renderTextureSystem.sourceFrame, renderTextureSystem.destinationFrame, renderer.projection.transform);
@@ -15740,12 +15719,12 @@ var tempMatrix$2 = new _math.Matrix();
         var inputClamp = globalUniforms.inputClamp;
         inputSize[0] = state.destinationFrame.width;
         inputSize[1] = state.destinationFrame.height;
-        inputSize[2] = 1.0 / inputSize[0];
-        inputSize[3] = 1.0 / inputSize[1];
+        inputSize[2] = 1 / inputSize[0];
+        inputSize[3] = 1 / inputSize[1];
         inputPixel[0] = Math.round(inputSize[0] * state.resolution);
         inputPixel[1] = Math.round(inputSize[1] * state.resolution);
-        inputPixel[2] = 1.0 / inputPixel[0];
-        inputPixel[3] = 1.0 / inputPixel[1];
+        inputPixel[2] = 1 / inputPixel[0];
+        inputPixel[3] = 1 / inputPixel[1];
         inputClamp[0] = 0.5 * inputPixel[2];
         inputClamp[1] = 0.5 * inputPixel[3];
         inputClamp[2] = state.sourceFrame.width * inputSize[2] - 0.5 * inputPixel[2];
@@ -15866,7 +15845,7 @@ var tempMatrix$2 = new _math.Matrix();
         var worldTransform = sprite.worldTransform.copyTo(_math.Matrix.TEMP_MATRIX);
         worldTransform.invert();
         mappedMatrix.prepend(worldTransform);
-        mappedMatrix.scale(1.0 / orig.width, 1.0 / orig.height);
+        mappedMatrix.scale(1 / orig.width, 1 / orig.height);
         mappedMatrix.translate(sprite.anchor.x, sprite.anchor.y);
         return mappedMatrix;
     };
@@ -15950,9 +15929,9 @@ var tempMatrix$2 = new _math.Matrix();
             var a = transform.a, b = transform.b, c = transform.c, d = transform.d;
             // Skip if skew/rotation present in matrix, except for multiple of 90° rotation. If rotation
             // is a multiple of 90°, then either pair of (b,c) or (a,d) will be (0,0).
-            if ((Math.abs(b) > 1e-4 || Math.abs(c) > 1e-4) && (Math.abs(a) > 1e-4 || Math.abs(d) > 1e-4)) return;
+            if ((Math.abs(b) > 0.0001 || Math.abs(c) > 0.0001) && (Math.abs(a) > 0.0001 || Math.abs(d) > 0.0001)) return;
         }
-        transform = transform ? tempMatrix$2.copyFrom(transform) : tempMatrix$2.identity();
+        transform = transform ? tempMatrix.copyFrom(transform) : tempMatrix.identity();
         // Get forward transform from world space to screen space
         transform.translate(-bindingSourceFrame.x, -bindingSourceFrame.y).scale(bindingDestinationFrame.width / bindingSourceFrame.width, bindingDestinationFrame.height / bindingSourceFrame.height).translate(bindingDestinationFrame.x, bindingDestinationFrame.y);
         // Convert frame to screen space
@@ -16658,7 +16637,7 @@ var tempRectangle = new _math.Rectangle();
     };
     return FramebufferSystem1;
 }();
-var byteSizeMap = {
+var byteSizeMap$1 = {
     5126: 4,
     5123: 2,
     5121: 1
@@ -16833,18 +16812,18 @@ var byteSizeMap = {
         for(var j in attributes){
             if (!attributes[j].size && program.attributeData[j]) attributes[j].size = program.attributeData[j].size;
             else if (!attributes[j].size) console.warn("PIXI Geometry attribute '" + j + "' size cannot be determined (likely the bound shader does not have the attribute)"); // eslint-disable-line
-            tempStride[attributes[j].buffer] += attributes[j].size * byteSizeMap[attributes[j].type];
+            tempStride[attributes[j].buffer] += attributes[j].size * byteSizeMap$1[attributes[j].type];
         }
         for(var j in attributes){
             var attribute = attributes[j];
             var attribSize = attribute.size;
             if (attribute.stride === undefined) {
-                if (tempStride[attribute.buffer] === attribSize * byteSizeMap[attribute.type]) attribute.stride = 0;
+                if (tempStride[attribute.buffer] === attribSize * byteSizeMap$1[attribute.type]) attribute.stride = 0;
                 else attribute.stride = tempStride[attribute.buffer];
             }
             if (attribute.start === undefined) {
                 attribute.start = tempStart[attribute.buffer];
-                tempStart[attribute.buffer] += attribSize * byteSizeMap[attribute.type];
+                tempStart[attribute.buffer] += attribSize * byteSizeMap$1[attribute.type];
             }
         }
         vao = gl.createVertexArray();
@@ -17567,9 +17546,9 @@ var unsafeEval;
     }
     return unsafeEval;
 }
-var defaultFragment$2 = "varying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\n\nvoid main(void){\n   gl_FragColor *= texture2D(uSampler, vTextureCoord);\n}";
-var defaultVertex$3 = "attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void){\n   gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n   vTextureCoord = aTextureCoord;\n}\n";
-var UID$1 = 0;
+var defaultFragment = "varying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\n\nvoid main(void){\n   gl_FragColor *= texture2D(uSampler, vTextureCoord);\n}";
+var defaultVertex = "attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void){\n   gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n   vTextureCoord = aTextureCoord;\n}\n";
+var UID$3 = 0;
 var nameCache = {};
 /**
  * Helper class to create a shader program.
@@ -17582,7 +17561,7 @@ var nameCache = {};
      * @param name - Name for shader
      */ function Program1(vertexSrc, fragmentSrc, name13) {
         if (name13 === void 0) name13 = 'pixi-shader';
-        this.id = UID$1++;
+        this.id = UID$3++;
         this.vertexSrc = vertexSrc || Program1.defaultVertexSrc;
         this.fragmentSrc = fragmentSrc || Program1.defaultFragmentSrc;
         this.vertexSrc = this.vertexSrc.trim();
@@ -17609,7 +17588,7 @@ var nameCache = {};
          *
          * @constant
          */ get: function() {
-            return defaultVertex$3;
+            return defaultVertex;
         },
         enumerable: false,
         configurable: true
@@ -17620,7 +17599,7 @@ var nameCache = {};
          *
          * @constant
          */ get: function() {
-            return defaultFragment$2;
+            return defaultFragment;
         },
         enumerable: false,
         configurable: true
@@ -17703,12 +17682,12 @@ var nameCache = {};
     };
     return Shader1;
 }();
-/* eslint-disable max-len */ var BLEND$1 = 0;
-var OFFSET$1 = 1;
-var CULLING$1 = 2;
-var DEPTH_TEST$1 = 3;
-var WINDING$1 = 4;
-var DEPTH_MASK$1 = 5;
+/* eslint-disable max-len */ var BLEND = 0;
+var OFFSET = 1;
+var CULLING = 2;
+var DEPTH_TEST = 3;
+var WINDING = 4;
+var DEPTH_MASK = 5;
 /**
  * This is a WebGL state, and is is passed to {@link PIXI.StateSystem}.
  *
@@ -17731,10 +17710,10 @@ var DEPTH_MASK$1 = 5;
          *
          * @default true
          */ get: function() {
-            return !!(this.data & 1 << BLEND$1);
+            return !!(this.data & 1 << BLEND);
         },
         set: function(value) {
-            if (!!(this.data & 1 << BLEND$1) !== value) this.data ^= 1 << BLEND$1;
+            if (!!(this.data & 1 << BLEND) !== value) this.data ^= 1 << BLEND;
         },
         enumerable: false,
         configurable: true
@@ -17745,10 +17724,10 @@ var DEPTH_MASK$1 = 5;
          *
          * @default false
          */ get: function() {
-            return !!(this.data & 1 << OFFSET$1);
+            return !!(this.data & 1 << OFFSET);
         },
         set: function(value) {
-            if (!!(this.data & 1 << OFFSET$1) !== value) this.data ^= 1 << OFFSET$1;
+            if (!!(this.data & 1 << OFFSET) !== value) this.data ^= 1 << OFFSET;
         },
         enumerable: false,
         configurable: true
@@ -17759,10 +17738,10 @@ var DEPTH_MASK$1 = 5;
          *
          * @default false
          */ get: function() {
-            return !!(this.data & 1 << CULLING$1);
+            return !!(this.data & 1 << CULLING);
         },
         set: function(value) {
-            if (!!(this.data & 1 << CULLING$1) !== value) this.data ^= 1 << CULLING$1;
+            if (!!(this.data & 1 << CULLING) !== value) this.data ^= 1 << CULLING;
         },
         enumerable: false,
         configurable: true
@@ -17773,10 +17752,10 @@ var DEPTH_MASK$1 = 5;
          *
          * @default false
          */ get: function() {
-            return !!(this.data & 1 << DEPTH_TEST$1);
+            return !!(this.data & 1 << DEPTH_TEST);
         },
         set: function(value) {
-            if (!!(this.data & 1 << DEPTH_TEST$1) !== value) this.data ^= 1 << DEPTH_TEST$1;
+            if (!!(this.data & 1 << DEPTH_TEST) !== value) this.data ^= 1 << DEPTH_TEST;
         },
         enumerable: false,
         configurable: true
@@ -17787,10 +17766,10 @@ var DEPTH_MASK$1 = 5;
          *
          * @default true
          */ get: function() {
-            return !!(this.data & 1 << DEPTH_MASK$1);
+            return !!(this.data & 1 << DEPTH_MASK);
         },
         set: function(value) {
-            if (!!(this.data & 1 << DEPTH_MASK$1) !== value) this.data ^= 1 << DEPTH_MASK$1;
+            if (!!(this.data & 1 << DEPTH_MASK) !== value) this.data ^= 1 << DEPTH_MASK;
         },
         enumerable: false,
         configurable: true
@@ -17801,10 +17780,10 @@ var DEPTH_MASK$1 = 5;
          *
          * @default false
          */ get: function() {
-            return !!(this.data & 1 << WINDING$1);
+            return !!(this.data & 1 << WINDING);
         },
         set: function(value) {
-            if (!!(this.data & 1 << WINDING$1) !== value) this.data ^= 1 << WINDING$1;
+            if (!!(this.data & 1 << WINDING) !== value) this.data ^= 1 << WINDING;
         },
         enumerable: false,
         configurable: true
@@ -17851,7 +17830,7 @@ var DEPTH_MASK$1 = 5;
     };
     return State1;
 }();
-var defaultVertex$2 = "attribute vec2 aVertexPosition;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nuniform vec4 inputSize;\nuniform vec4 outputFrame;\n\nvec4 filterVertexPosition( void )\n{\n    vec2 position = aVertexPosition * max(outputFrame.zw, vec2(0.)) + outputFrame.xy;\n\n    return vec4((projectionMatrix * vec3(position, 1.0)).xy, 0.0, 1.0);\n}\n\nvec2 filterTextureCoord( void )\n{\n    return aVertexPosition * (outputFrame.zw * inputSize.zw);\n}\n\nvoid main(void)\n{\n    gl_Position = filterVertexPosition();\n    vTextureCoord = filterTextureCoord();\n}\n";
+var defaultVertex$1 = "attribute vec2 aVertexPosition;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nuniform vec4 inputSize;\nuniform vec4 outputFrame;\n\nvec4 filterVertexPosition( void )\n{\n    vec2 position = aVertexPosition * max(outputFrame.zw, vec2(0.)) + outputFrame.xy;\n\n    return vec4((projectionMatrix * vec3(position, 1.0)).xy, 0.0, 1.0);\n}\n\nvec2 filterTextureCoord( void )\n{\n    return aVertexPosition * (outputFrame.zw * inputSize.zw);\n}\n\nvoid main(void)\n{\n    gl_Position = filterVertexPosition();\n    vTextureCoord = filterTextureCoord();\n}\n";
 var defaultFragment$1 = "varying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\n\nvoid main(void){\n   gl_FragColor = texture2D(uSampler, vTextureCoord);\n}\n";
 /**
  * A filter is a special shader that applies post-processing effects to an input texture and writes into an output
@@ -18088,7 +18067,7 @@ var defaultFragment$1 = "varying vec2 vTextureCoord;\n\nuniform sampler2D uSampl
          *
          * @constant
          */ get: function() {
-            return defaultVertex$2;
+            return defaultVertex$1;
         },
         enumerable: false,
         configurable: true
@@ -18251,9 +18230,9 @@ var tempMat = new _math.Matrix();
         if (!tex.valid) return;
         if (!tex.uvMatrix) // margin = 0.0, let it bleed a bit, shader code becomes easier
         // assuming that atlas textures were made with 1-pixel padding
-        tex.uvMatrix = new TextureMatrix(tex, 0.0);
+        tex.uvMatrix = new TextureMatrix(tex, 0);
         tex.uvMatrix.update();
-        this.uniforms.npmAlpha = tex.baseTexture.alphaMode ? 0.0 : 1.0;
+        this.uniforms.npmAlpha = tex.baseTexture.alphaMode ? 0 : 1;
         this.uniforms.mask = tex;
         // get _normalized sprite texture coords_ and convert them to _normalized atlas texture coords_ with `prepend`
         this.uniforms.otherMatrix = filterManager.calculateSpriteMatrix(this.maskMatrix, maskSprite).prepend(tex.uvMatrix.mapCoord);
@@ -18515,7 +18494,7 @@ var tempMatrix$1 = new _math.Matrix();
         var a = matrix.a, b = matrix.b, c = matrix.c, d = matrix.d;
         // Skip if skew/rotation present in matrix, except for multiple of 90° rotation. If rotation
         // is a multiple of 90°, then either pair of (b,c) or (a,d) will be (0,0).
-        return (Math.abs(b) > 1e-4 || Math.abs(c) > 1e-4) && (Math.abs(a) > 1e-4 || Math.abs(d) > 1e-4);
+        return (Math.abs(b) > 0.0001 || Math.abs(c) > 0.0001) && (Math.abs(a) > 0.0001 || Math.abs(d) > 0.0001);
     };
     /**
      * Test, whether the object can be scissor mask with current renderer projection.
@@ -18616,7 +18595,7 @@ var tempMatrix$1 = new _math.Matrix();
         maskData._stencilCounter++;
         // Increment the reference stencil value where the new mask overlaps with the old ones.
         gl.colorMask(false, false, false, false);
-        gl.stencilFunc(gl.EQUAL, prevMaskCount, 0xFFFFFFFF);
+        gl.stencilFunc(gl.EQUAL, prevMaskCount, 4294967295);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
         maskObject.renderable = true;
         maskObject.render(this.renderer);
@@ -18649,7 +18628,7 @@ var tempMatrix$1 = new _math.Matrix();
      */ StencilSystem1.prototype._useCurrent = function() {
         var gl = this.renderer.gl;
         gl.colorMask(true, true, true, true);
-        gl.stencilFunc(gl.EQUAL, this.getStackLength(), 0xFFFFFFFF);
+        gl.stencilFunc(gl.EQUAL, this.getStackLength(), 4294967295);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
     };
     return StencilSystem1;
@@ -19122,7 +19101,7 @@ function generateUniformBufferSync(group, uniformData) {
     var glProgram = new GLProgram(webGLProgram, uniformData);
     return glProgram;
 }
-var UID = 0;
+var UID$4 = 0;
 // default sync data so we don't create a new one each time!
 var defaultSyncData = {
     textureCount: 0,
@@ -19143,7 +19122,7 @@ var defaultSyncData = {
         this.program = null;
         this.cache = {};
         this._uboCache = {};
-        this.id = UID++;
+        this.id = UID$4++;
     }
     /**
      * Overrideable function by `@pixi/unsafe-eval` to silence
@@ -19457,12 +19436,12 @@ var defaultSyncData = {
     ];
     return array;
 }
-var BLEND = 0;
-var OFFSET = 1;
-var CULLING = 2;
-var DEPTH_TEST = 3;
-var WINDING = 4;
-var DEPTH_MASK = 5;
+var BLEND$1 = 0;
+var OFFSET$1 = 1;
+var CULLING$1 = 2;
+var DEPTH_TEST$1 = 3;
+var WINDING$1 = 4;
+var DEPTH_MASK$1 = 5;
 /**
  * System plugin to the renderer to manage WebGL state machines.
  *
@@ -19476,12 +19455,12 @@ var DEPTH_MASK = 5;
         this._blendEq = false;
         // map functions for when we set state..
         this.map = [];
-        this.map[BLEND] = this.setBlend;
-        this.map[OFFSET] = this.setOffset;
-        this.map[CULLING] = this.setCullFace;
-        this.map[DEPTH_TEST] = this.setDepthTest;
-        this.map[WINDING] = this.setFrontFace;
-        this.map[DEPTH_MASK] = this.setDepthMask;
+        this.map[BLEND$1] = this.setBlend;
+        this.map[OFFSET$1] = this.setOffset;
+        this.map[CULLING$1] = this.setCullFace;
+        this.map[DEPTH_TEST$1] = this.setDepthTest;
+        this.map[WINDING$1] = this.setFrontFace;
+        this.map[DEPTH_MASK$1] = this.setDepthMask;
         this.checks = [];
         this.defaultState = new State();
         this.defaultState.blend = true;
@@ -19995,7 +19974,7 @@ var _systems = {
     TextureGCSystem: TextureGCSystem,
     TextureSystem: TextureSystem
 };
-var tempMatrix = new _math.Matrix();
+var tempMatrix$2 = new _math.Matrix();
 /**
  * The AbstractRenderer is the base for a PixiJS Renderer. It is extended by the {@link PIXI.CanvasRenderer}
  * and {@link PIXI.Renderer} which can be used for rendering a PixiJS scene.
@@ -20094,7 +20073,7 @@ var tempMatrix = new _math.Matrix();
          *
          * @member {number}
          * @protected
-         */ _this._backgroundColor = 0x000000;
+         */ _this._backgroundColor = 0;
         /**
          * The background color as an [R, G, B, A] array.
          *
@@ -20217,12 +20196,12 @@ var tempMatrix = new _math.Matrix();
             width: region.width,
             height: region.height
         }, textureOptions));
-        tempMatrix.tx = -region.x;
-        tempMatrix.ty = -region.y;
+        tempMatrix$2.tx = -region.x;
+        tempMatrix$2.ty = -region.y;
         this.render(displayObject, {
             renderTexture: renderTexture,
             clear: false,
-            transform: tempMatrix,
+            transform: tempMatrix$2,
             skipUpdateTransform: !!displayObject.parent
         });
         return renderTexture;
@@ -20733,7 +20712,7 @@ var $defaultFilterVertex = "attribute vec2 aVertexPosition;\n\nuniform mat3 proj
  * @member {string} defaultFilterVertex
  */ // NOTE: This black magic is so that @microsoft/api-extractor does not complain! This explicitly specifies the types
 // of defaultVertex, defaultFilterVertex.
-var defaultVertex$1 = $defaultVertex;
+var defaultVertex$2 = $defaultVertex;
 var defaultFilterVertex = $defaultFilterVertex;
 /**
  * Use the ISystem interface instead.
@@ -21171,8 +21150,8 @@ var defaultFilterVertex = $defaultFilterVertex;
         var indicies = element.indices;
         var vertexData = element.vertexData;
         var textureId = element._texture.baseTexture._batchLocation;
-        var alpha = Math.min(element.worldAlpha, 1.0);
-        var argb = alpha < 1.0 && element._texture.baseTexture.alphaMode ? _utils.premultiplyTint(element._tintRGB, alpha) : element._tintRGB + (alpha * 255 << 24);
+        var alpha = Math.min(element.worldAlpha, 1);
+        var argb = alpha < 1 && element._texture.baseTexture.alphaMode ? _utils.premultiplyTint(element._tintRGB, alpha) : element._tintRGB + (alpha * 255 << 24);
         // lets not worry about tint! for now..
         for(var i = 0; i < vertexData.length; i += 2){
             float32View[aIndex++] = vertexData[i];
@@ -21280,8 +21259,8 @@ var defaultFilterVertex = $defaultFilterVertex;
     }
     return BatchGeometry1;
 }(Geometry);
-var defaultVertex = "precision highp float;\nattribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\nattribute vec4 aColor;\nattribute float aTextureId;\n\nuniform mat3 projectionMatrix;\nuniform mat3 translationMatrix;\nuniform vec4 tint;\n\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\nvarying float vTextureId;\n\nvoid main(void){\n    gl_Position = vec4((projectionMatrix * translationMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n\n    vTextureCoord = aTextureCoord;\n    vTextureId = aTextureId;\n    vColor = aColor * tint;\n}\n";
-var defaultFragment = "varying vec2 vTextureCoord;\nvarying vec4 vColor;\nvarying float vTextureId;\nuniform sampler2D uSamplers[%count%];\n\nvoid main(void){\n    vec4 color;\n    %forloop%\n    gl_FragColor = color * vColor;\n}\n";
+var defaultVertex$3 = "precision highp float;\nattribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\nattribute vec4 aColor;\nattribute float aTextureId;\n\nuniform mat3 projectionMatrix;\nuniform mat3 translationMatrix;\nuniform vec4 tint;\n\nvarying vec2 vTextureCoord;\nvarying vec4 vColor;\nvarying float vTextureId;\n\nvoid main(void){\n    gl_Position = vec4((projectionMatrix * translationMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n\n    vTextureCoord = aTextureCoord;\n    vTextureId = aTextureId;\n    vColor = aColor * tint;\n}\n";
+var defaultFragment$2 = "varying vec2 vTextureCoord;\nvarying vec4 vColor;\nvarying float vTextureId;\nuniform sampler2D uSamplers[%count%];\n\nvoid main(void){\n    vec4 color;\n    %forloop%\n    gl_FragColor = color * vColor;\n}\n";
 /** @memberof PIXI */ var BatchPluginFactory = /** @class */ function() {
     function BatchPluginFactory1() {}
     /**
@@ -21313,8 +21292,8 @@ var defaultFragment = "varying vec2 vTextureCoord;\nvarying vec4 vColor;\nvaryin
      * @return {*} New batch renderer plugin
      */ BatchPluginFactory1.create = function(options) {
         var _a = Object.assign({
-            vertex: defaultVertex,
-            fragment: defaultFragment,
+            vertex: defaultVertex$3,
+            fragment: defaultFragment$2,
             geometryClass: BatchGeometry,
             vertexSize: 6
         }, options), vertex1 = _a.vertex, fragment1 = _a.fragment, vertexSize = _a.vertexSize, geometryClass = _a.geometryClass;
@@ -21336,7 +21315,7 @@ var defaultFragment = "varying vec2 vTextureCoord;\nvarying vec4 vColor;\nvaryin
          *
          * @readonly
          */ get: function() {
-            return defaultVertex;
+            return defaultVertex$3;
         },
         enumerable: false,
         configurable: true
@@ -21347,7 +21326,7 @@ var defaultFragment = "varying vec2 vTextureCoord;\nvarying vec4 vColor;\nvaryin
          *
          * @readonly
          */ get: function() {
-            return defaultFragment;
+            return defaultFragment$2;
         },
         enumerable: false,
         configurable: true
@@ -21394,8 +21373,8 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Runner", ()=>Runner
 );
 /*!
- * @pixi/runner - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/runner - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/runner is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -21573,8 +21552,8 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Extract", ()=>Extract
 );
 /*!
- * @pixi/extract - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/extract - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/extract is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -21668,8 +21647,8 @@ var BYTES_PER_PIXEL = 4;
             frame.height = this.renderer.height;
             renderer.renderTexture.bind(null);
         }
-        var width = Math.floor(frame.width * resolution + 1e-4);
-        var height = Math.floor(frame.height * resolution + 1e-4);
+        var width = Math.floor(frame.width * resolution + 0.0001);
+        var height = Math.floor(frame.height * resolution + 0.0001);
         var canvasBuffer = new _utils.CanvasRenderTarget(width, height, 1);
         var webglPixels = new Uint8Array(BYTES_PER_PIXEL * width * height);
         // read pixels to the array
@@ -21747,9 +21726,9 @@ var BYTES_PER_PIXEL = 4;
         for(var i = 0; i < pixels.length; i += 4){
             var alpha = out[i + 3] = pixels[i + 3];
             if (alpha !== 0) {
-                out[i] = Math.round(Math.min(pixels[i] * 255.0 / alpha, 255.0));
-                out[i + 1] = Math.round(Math.min(pixels[i + 1] * 255.0 / alpha, 255.0));
-                out[i + 2] = Math.round(Math.min(pixels[i + 2] * 255.0 / alpha, 255.0));
+                out[i] = Math.round(Math.min(pixels[i] * 255 / alpha, 255));
+                out[i + 1] = Math.round(Math.min(pixels[i + 1] * 255 / alpha, 255));
+                out[i + 2] = Math.round(Math.min(pixels[i + 2] * 255 / alpha, 255));
             } else {
                 out[i] = pixels[i];
                 out[i + 1] = pixels[i + 1];
@@ -21772,8 +21751,8 @@ parcelHelpers.export(exports, "LoaderResource", ()=>LoaderResource
 parcelHelpers.export(exports, "TextureLoader", ()=>TextureLoader
 );
 /*!
- * @pixi/loaders - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/loaders - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/loaders is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -21979,7 +21958,7 @@ parcelHelpers.export(exports, "TextureLoader", ()=>TextureLoader
     return uri;
 }
 // tests if CORS is supported in XHR, if not we need to use XDR
-var useXdr;
+var useXdr = !!(globalThis.XDomainRequest && !('withCredentials' in new XMLHttpRequest()));
 var tempAnchor = null;
 // some status constants
 var STATUS_NONE = 0;
@@ -21988,7 +21967,7 @@ var STATUS_EMPTY = 204;
 var STATUS_IE_BUG_EMPTY = 1223;
 var STATUS_TYPE_OK = 2;
 // noop
-function _noop$1() {}
+function _noop() {}
 /**
  * Quick helper to set a value on one of the extension maps. Ensures there is no
  * dot at the start of the extension.
@@ -22041,7 +22020,7 @@ function _noop$1() {}
          *
          * @private
          * @member {function}
-         */ this._dequeue = _noop$1;
+         */ this._dequeue = _noop;
         /**
          * Used a storage place for the on load binding used privately by the loader.
          *
@@ -22112,7 +22091,7 @@ function _noop$1() {}
         this.progressChunk = 0;
         // The `dequeue` method that will be used a storage place for the async queue dequeue method
         // used privately by the loader.
-        this._dequeue = _noop$1;
+        this._dequeue = _noop;
         // Used a storage place for the on load binding used privately by the loader.
         this._onLoadBinding = null;
         // The timer for element loads to check if they timeout.
@@ -22286,7 +22265,6 @@ function _noop$1() {}
                 break;
             case LoaderResource1.LOAD_TYPE.XHR:
             /* falls through */ default:
-                if (typeof useXdr === 'undefined') useXdr = !!(globalThis.XDomainRequest && !('withCredentials' in new XMLHttpRequest()));
                 if (useXdr && this.crossOrigin) this._loadXdr();
                 else this._loadXhr();
                 break;
@@ -22625,12 +22603,28 @@ function _noop$1() {}
 }();
 // eslint-disable-next-line @typescript-eslint/no-namespace
 (function(LoaderResource2) {
+    /**
+     * The types of resources a resource could represent.
+     *
+     * @static
+     * @readonly
+     * @enum {number}
+     * @memberof PIXI.LoaderResource
+     */ var STATUS_FLAGS1;
     (function(STATUS_FLAGS) {
         /** None */ STATUS_FLAGS[STATUS_FLAGS["NONE"] = 0] = "NONE";
         /** Data URL */ STATUS_FLAGS[STATUS_FLAGS["DATA_URL"] = 1] = "DATA_URL";
         /** Complete */ STATUS_FLAGS[STATUS_FLAGS["COMPLETE"] = 2] = "COMPLETE";
         /** Loading */ STATUS_FLAGS[STATUS_FLAGS["LOADING"] = 4] = "LOADING";
-    })(LoaderResource2.STATUS_FLAGS || (LoaderResource2.STATUS_FLAGS = {}));
+    })(STATUS_FLAGS1 = LoaderResource2.STATUS_FLAGS || (LoaderResource2.STATUS_FLAGS = {}));
+    /**
+     * The types of resources a resource could represent.
+     *
+     * @static
+     * @readonly
+     * @enum {number}
+     * @memberof PIXI.LoaderResource
+     */ var TYPE1;
     (function(TYPE) {
         /** Unknown */ TYPE[TYPE["UNKNOWN"] = 0] = "UNKNOWN";
         /** JSON */ TYPE[TYPE["JSON"] = 1] = "JSON";
@@ -22639,13 +22633,29 @@ function _noop$1() {}
         /** Audio */ TYPE[TYPE["AUDIO"] = 4] = "AUDIO";
         /** Video */ TYPE[TYPE["VIDEO"] = 5] = "VIDEO";
         /** Plain text */ TYPE[TYPE["TEXT"] = 6] = "TEXT";
-    })(LoaderResource2.TYPE || (LoaderResource2.TYPE = {}));
+    })(TYPE1 = LoaderResource2.TYPE || (LoaderResource2.TYPE = {}));
+    /**
+     * The types of loading a resource can use.
+     *
+     * @static
+     * @readonly
+     * @enum {number}
+     * @memberof PIXI.LoaderResource
+     */ var LOAD_TYPE1;
     (function(LOAD_TYPE) {
         /** Uses XMLHttpRequest to load the resource. */ LOAD_TYPE[LOAD_TYPE["XHR"] = 1] = "XHR";
         /** Uses an `Image` object to load the resource. */ LOAD_TYPE[LOAD_TYPE["IMAGE"] = 2] = "IMAGE";
         /** Uses an `Audio` object to load the resource. */ LOAD_TYPE[LOAD_TYPE["AUDIO"] = 3] = "AUDIO";
         /** Uses a `Video` object to load the resource. */ LOAD_TYPE[LOAD_TYPE["VIDEO"] = 4] = "VIDEO";
-    })(LoaderResource2.LOAD_TYPE || (LoaderResource2.LOAD_TYPE = {}));
+    })(LOAD_TYPE1 = LoaderResource2.LOAD_TYPE || (LoaderResource2.LOAD_TYPE = {}));
+    /**
+     * The XHR ready states, used internally.
+     *
+     * @static
+     * @readonly
+     * @enum {string}
+     * @memberof PIXI.LoaderResource
+     */ var XHR_RESPONSE_TYPE1;
     (function(XHR_RESPONSE_TYPE) {
         /** string */ XHR_RESPONSE_TYPE["DEFAULT"] = "text";
         /** ArrayBuffer */ XHR_RESPONSE_TYPE["BUFFER"] = "arraybuffer";
@@ -22653,7 +22663,7 @@ function _noop$1() {}
         /** Document */ XHR_RESPONSE_TYPE["DOCUMENT"] = "document";
         /** Object */ XHR_RESPONSE_TYPE["JSON"] = "json";
         /** String */ XHR_RESPONSE_TYPE["TEXT"] = "text";
-    })(LoaderResource2.XHR_RESPONSE_TYPE || (LoaderResource2.XHR_RESPONSE_TYPE = {}));
+    })(XHR_RESPONSE_TYPE1 = LoaderResource2.XHR_RESPONSE_TYPE || (LoaderResource2.XHR_RESPONSE_TYPE = {}));
     LoaderResource2._loadTypeMap = {
         // images
         gif: LoaderResource2.LOAD_TYPE.IMAGE,
@@ -22712,7 +22722,7 @@ function _noop$1() {}
 /**
  * Smaller version of the async library constructs.
  * @ignore
- */ function _noop() {}
+ */ function _noop$1() {}
 /**
  * Ensures a function is only called once.
  * @ignore
@@ -22751,11 +22761,11 @@ function _noop$1() {}
         var _this = this;
         if (concurrency === void 0) concurrency = 1;
         this.workers = 0;
-        this.saturated = _noop;
-        this.unsaturated = _noop;
-        this.empty = _noop;
-        this.drain = _noop;
-        this.error = _noop;
+        this.saturated = _noop$1;
+        this.unsaturated = _noop$1;
+        this.empty = _noop$1;
+        this.drain = _noop$1;
+        this.error = _noop$1;
         this.started = false;
         this.paused = false;
         this._tasks = [];
@@ -22770,7 +22780,7 @@ function _noop$1() {}
                 }, 1);
                 return;
             }
-            var item = new AsyncQueueItem(data, typeof callback === 'function' ? callback : _noop);
+            var item = new AsyncQueueItem(data, typeof callback === 'function' ? callback : _noop$1);
             if (insertAtFront) _this._tasks.unshift(item);
             else _this._tasks.push(item);
             setTimeout(_this.process, 1);
@@ -22787,7 +22797,7 @@ function _noop$1() {}
         this._worker = worker;
         if (concurrency === 0) throw new Error('Concurrency must not be zero');
         this.concurrency = concurrency;
-        this.buffer = concurrency / 4.0;
+        this.buffer = concurrency / 4;
     }
     /**
      * @private
@@ -22813,7 +22823,7 @@ function _noop$1() {}
     };
     AsyncQueue1.prototype.kill = function() {
         this.workers = 0;
-        this.drain = _noop;
+        this.drain = _noop$1;
         this.started = false;
         this._tasks = [];
     };
@@ -23343,17 +23353,17 @@ var _keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=
         ];
         for(var jnx = 0; jnx < bytebuffer.length; ++jnx)if (inx < input.length) // throw away high-order byte, as documented at:
         // https://developer.mozilla.org/En/Using_XMLHttpRequest#Handling_binary_data
-        bytebuffer[jnx] = input.charCodeAt(inx++) & 0xff;
+        bytebuffer[jnx] = input.charCodeAt(inx++) & 255;
         else bytebuffer[jnx] = 0;
         // Get each encoded character, 6 bits at a time
         // index 1: first 6 bits
         encodedCharIndexes[0] = bytebuffer[0] >> 2;
         // index 2: second 6 bits (2 least significant bits from input byte 1 + 4 most significant bits from byte 2)
-        encodedCharIndexes[1] = (bytebuffer[0] & 0x3) << 4 | bytebuffer[1] >> 4;
+        encodedCharIndexes[1] = (bytebuffer[0] & 3) << 4 | bytebuffer[1] >> 4;
         // index 3: third 6 bits (4 least significant bits from input byte 2 + 2 most significant bits from byte 3)
-        encodedCharIndexes[2] = (bytebuffer[1] & 0x0f) << 2 | bytebuffer[2] >> 6;
+        encodedCharIndexes[2] = (bytebuffer[1] & 15) << 2 | bytebuffer[2] >> 6;
         // index 3: forth 6 bits (6 least significant bits from input byte 3)
-        encodedCharIndexes[3] = bytebuffer[2] & 0x3f;
+        encodedCharIndexes[3] = bytebuffer[2] & 63;
         // Determine whether padding happened, and adjust accordingly
         var paddingBytes = inx - (input.length - 1);
         switch(paddingBytes){
@@ -23373,6 +23383,7 @@ var _keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=
     }
     return output;
 }
+var Url = self.URL || self.webkitURL;
 /**
  * A middleware for transforming XHR loaded Blobs into more useful objects
  *
@@ -23408,8 +23419,7 @@ var _keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=
                 return;
             }
         } else if (resource.data.type.indexOf('image') === 0) {
-            var Url_1 = globalThis.URL || globalThis.webkitURL;
-            var src_1 = Url_1.createObjectURL(resource.data);
+            var src_1 = Url.createObjectURL(resource.data);
             resource.blob = resource.data;
             resource.data = new Image();
             resource.data.src = src_1;
@@ -23417,7 +23427,7 @@ var _keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=
             // cleanup the no longer used blob after the image loads
             // TODO: Is this correct? Will the image be invalid after revoking?
             resource.data.onload = function() {
-                Url_1.revokeObjectURL(src_1);
+                Url.revokeObjectURL(src_1);
                 resource.data.onload = null;
                 next();
             };
@@ -23458,8 +23468,8 @@ parcelHelpers.export(exports, "TYPES_TO_BYTES_PER_COMPONENT", ()=>TYPES_TO_BYTES
 parcelHelpers.export(exports, "TYPES_TO_BYTES_PER_PIXEL", ()=>TYPES_TO_BYTES_PER_PIXEL
 );
 /*!
- * @pixi/compressed-textures - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/compressed-textures - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/compressed-textures is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -23467,7 +23477,7 @@ parcelHelpers.export(exports, "TYPES_TO_BYTES_PER_PIXEL", ()=>TYPES_TO_BYTES_PER
 var _loaders = require("@pixi/loaders");
 var _utils = require("@pixi/utils");
 var _constants = require("@pixi/constants");
-var _a$2;
+var _a;
 /**
  * WebGL internal formats, including compressed texture formats provided by extensions
  *
@@ -23543,14 +23553,14 @@ var _a$2;
  * @memberof PIXI
  * @static
  * @ignore
- */ var INTERNAL_FORMAT_TO_BYTES_PER_PIXEL = (_a$2 = {}, // WEBGL_compressed_texture_s3tc
-_a$2[INTERNAL_FORMATS.COMPRESSED_RGB_S3TC_DXT1_EXT] = 0.5, _a$2[INTERNAL_FORMATS.COMPRESSED_RGBA_S3TC_DXT1_EXT] = 0.5, _a$2[INTERNAL_FORMATS.COMPRESSED_RGBA_S3TC_DXT3_EXT] = 1, _a$2[INTERNAL_FORMATS.COMPRESSED_RGBA_S3TC_DXT5_EXT] = 1, // WEBGL_compressed_texture_s3tc
-_a$2[INTERNAL_FORMATS.COMPRESSED_SRGB_S3TC_DXT1_EXT] = 0.5, _a$2[INTERNAL_FORMATS.COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT] = 0.5, _a$2[INTERNAL_FORMATS.COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT] = 1, _a$2[INTERNAL_FORMATS.COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT] = 1, // WEBGL_compressed_texture_etc
-_a$2[INTERNAL_FORMATS.COMPRESSED_R11_EAC] = 0.5, _a$2[INTERNAL_FORMATS.COMPRESSED_SIGNED_R11_EAC] = 0.5, _a$2[INTERNAL_FORMATS.COMPRESSED_RG11_EAC] = 1, _a$2[INTERNAL_FORMATS.COMPRESSED_SIGNED_RG11_EAC] = 1, _a$2[INTERNAL_FORMATS.COMPRESSED_RGB8_ETC2] = 0.5, _a$2[INTERNAL_FORMATS.COMPRESSED_RGBA8_ETC2_EAC] = 1, _a$2[INTERNAL_FORMATS.COMPRESSED_SRGB8_ETC2] = 0.5, _a$2[INTERNAL_FORMATS.COMPRESSED_SRGB8_ALPHA8_ETC2_EAC] = 1, _a$2[INTERNAL_FORMATS.COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2] = 0.5, _a$2[INTERNAL_FORMATS.COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2] = 0.5, // WEBGL_compressed_texture_pvrtc
-_a$2[INTERNAL_FORMATS.COMPRESSED_RGB_PVRTC_4BPPV1_IMG] = 0.5, _a$2[INTERNAL_FORMATS.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG] = 0.5, _a$2[INTERNAL_FORMATS.COMPRESSED_RGB_PVRTC_2BPPV1_IMG] = 0.25, _a$2[INTERNAL_FORMATS.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG] = 0.25, // WEBGL_compressed_texture_etc1
-_a$2[INTERNAL_FORMATS.COMPRESSED_RGB_ETC1_WEBGL] = 0.5, // @see https://www.khronos.org/registry/OpenGL/extensions/AMD/AMD_compressed_ATC_texture.txt
+ */ var INTERNAL_FORMAT_TO_BYTES_PER_PIXEL = (_a = {}, // WEBGL_compressed_texture_s3tc
+_a[INTERNAL_FORMATS.COMPRESSED_RGB_S3TC_DXT1_EXT] = 0.5, _a[INTERNAL_FORMATS.COMPRESSED_RGBA_S3TC_DXT1_EXT] = 0.5, _a[INTERNAL_FORMATS.COMPRESSED_RGBA_S3TC_DXT3_EXT] = 1, _a[INTERNAL_FORMATS.COMPRESSED_RGBA_S3TC_DXT5_EXT] = 1, // WEBGL_compressed_texture_s3tc
+_a[INTERNAL_FORMATS.COMPRESSED_SRGB_S3TC_DXT1_EXT] = 0.5, _a[INTERNAL_FORMATS.COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT] = 0.5, _a[INTERNAL_FORMATS.COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT] = 1, _a[INTERNAL_FORMATS.COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT] = 1, // WEBGL_compressed_texture_etc
+_a[INTERNAL_FORMATS.COMPRESSED_R11_EAC] = 0.5, _a[INTERNAL_FORMATS.COMPRESSED_SIGNED_R11_EAC] = 0.5, _a[INTERNAL_FORMATS.COMPRESSED_RG11_EAC] = 1, _a[INTERNAL_FORMATS.COMPRESSED_SIGNED_RG11_EAC] = 1, _a[INTERNAL_FORMATS.COMPRESSED_RGB8_ETC2] = 0.5, _a[INTERNAL_FORMATS.COMPRESSED_RGBA8_ETC2_EAC] = 1, _a[INTERNAL_FORMATS.COMPRESSED_SRGB8_ETC2] = 0.5, _a[INTERNAL_FORMATS.COMPRESSED_SRGB8_ALPHA8_ETC2_EAC] = 1, _a[INTERNAL_FORMATS.COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2] = 0.5, _a[INTERNAL_FORMATS.COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2] = 0.5, // WEBGL_compressed_texture_pvrtc
+_a[INTERNAL_FORMATS.COMPRESSED_RGB_PVRTC_4BPPV1_IMG] = 0.5, _a[INTERNAL_FORMATS.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG] = 0.5, _a[INTERNAL_FORMATS.COMPRESSED_RGB_PVRTC_2BPPV1_IMG] = 0.25, _a[INTERNAL_FORMATS.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG] = 0.25, // WEBGL_compressed_texture_etc1
+_a[INTERNAL_FORMATS.COMPRESSED_RGB_ETC1_WEBGL] = 0.5, // @see https://www.khronos.org/registry/OpenGL/extensions/AMD/AMD_compressed_ATC_texture.txt
 // WEBGL_compressed_texture_atc
-_a$2[INTERNAL_FORMATS.COMPRESSED_RGB_ATC_WEBGL] = 0.5, _a$2[INTERNAL_FORMATS.COMPRESSED_RGBA_ATC_EXPLICIT_ALPHA_WEBGL] = 1, _a$2[INTERNAL_FORMATS.COMPRESSED_RGBA_ATC_INTERPOLATED_ALPHA_WEBGL] = 1, _a$2);
+_a[INTERNAL_FORMATS.COMPRESSED_RGB_ATC_WEBGL] = 0.5, _a[INTERNAL_FORMATS.COMPRESSED_RGBA_ATC_EXPLICIT_ALPHA_WEBGL] = 1, _a[INTERNAL_FORMATS.COMPRESSED_RGBA_ATC_INTERPOLATED_ALPHA_WEBGL] = 1, _a);
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -23898,11 +23908,11 @@ function __generator(thisArg, body) {
      * @private
      * @param format - the compression format to get the extension for.
      */ CompressedTextureResource1._formatToExtension = function(format) {
-        if (format >= 0x83F0 && format <= 0x83F3) return 's3tc';
-        else if (format >= 0x9270 && format <= 0x9279) return 'etc';
-        else if (format >= 0x8C00 && format <= 0x8C03) return 'pvrtc';
-        else if (format >= 0x8D64) return 'etc1';
-        else if (format >= 0x8C92 && format <= 0x87EE) return 'atc';
+        if (format >= 33776 && format <= 33779) return 's3tc';
+        else if (format >= 37488 && format <= 37497) return 'etc';
+        else if (format >= 35840 && format <= 35843) return 'pvrtc';
+        else if (format >= 36196) return 'etc1';
+        else if (format >= 35986 && format <= 34798) return 'atc';
         throw new Error('Invalid (compressed) texture format given!');
     };
     /**
@@ -24033,49 +24043,35 @@ function __generator(thisArg, body) {
             });
         } else next();
     };
-    Object.defineProperty(CompressedTextureLoader1, "textureExtensions", {
-        /**  Map of available texture extensions. */ get: function() {
-            if (!CompressedTextureLoader1._textureExtensions) {
-                // Auto-detect WebGL compressed-texture extensions
-                var canvas = document.createElement('canvas');
-                var gl = canvas.getContext('webgl');
-                if (!gl) {
-                    console.warn('WebGL not available for compressed textures. Silently failing.');
-                    return {};
-                }
-                var extensions = {
-                    s3tc: gl.getExtension('WEBGL_compressed_texture_s3tc'),
-                    s3tc_sRGB: gl.getExtension('WEBGL_compressed_texture_s3tc_srgb'),
-                    etc: gl.getExtension('WEBGL_compressed_texture_etc'),
-                    etc1: gl.getExtension('WEBGL_compressed_texture_etc1'),
-                    pvrtc: gl.getExtension('WEBGL_compressed_texture_pvrtc') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc'),
-                    atc: gl.getExtension('WEBGL_compressed_texture_atc'),
-                    astc: gl.getExtension('WEBGL_compressed_texture_astc')
-                };
-                CompressedTextureLoader1._textureExtensions = extensions;
-            }
-            return CompressedTextureLoader1._textureExtensions;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(CompressedTextureLoader1, "textureFormats", {
-        /** Map of available texture formats. */ get: function() {
-            if (!CompressedTextureLoader1._textureFormats) {
-                var extensions = CompressedTextureLoader1.textureExtensions;
-                CompressedTextureLoader1._textureFormats = {};
-                // Assign all available compressed-texture formats
-                for(var extensionName in extensions){
-                    var extension = extensions[extensionName];
-                    if (!extension) continue;
-                    Object.assign(CompressedTextureLoader1._textureFormats, Object.getPrototypeOf(extension));
-                }
-            }
-            return CompressedTextureLoader1._textureFormats;
-        },
-        enumerable: false,
-        configurable: true
-    });
+    /**
+     * Detects the available compressed texture extensions on the device.
+     * @ignore
+     */ CompressedTextureLoader1.add = function() {
+        // Auto-detect WebGL compressed-texture extensions
+        var canvas = document.createElement('canvas');
+        var gl = canvas.getContext('webgl');
+        if (!gl) {
+            console.warn('WebGL not available for compressed textures. Silently failing.');
+            return;
+        }
+        var extensions = {
+            s3tc: gl.getExtension('WEBGL_compressed_texture_s3tc'),
+            s3tc_sRGB: gl.getExtension('WEBGL_compressed_texture_s3tc_srgb'),
+            etc: gl.getExtension('WEBGL_compressed_texture_etc'),
+            etc1: gl.getExtension('WEBGL_compressed_texture_etc1'),
+            pvrtc: gl.getExtension('WEBGL_compressed_texture_pvrtc') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc'),
+            atc: gl.getExtension('WEBGL_compressed_texture_atc'),
+            astc: gl.getExtension('WEBGL_compressed_texture_astc')
+        };
+        CompressedTextureLoader1.textureExtensions = extensions;
+        CompressedTextureLoader1.textureFormats = {};
+        // Assign all available compressed-texture formats
+        for(var extensionName in extensions){
+            var extension = extensions[extensionName];
+            if (!extension) continue;
+            Object.assign(CompressedTextureLoader1.textureFormats, Object.getPrototypeOf(extension));
+        }
+    };
     return CompressedTextureLoader1;
 }();
 /**
@@ -24112,7 +24108,7 @@ function __generator(thisArg, body) {
     });
     return result;
 }
-var _a$1, _b$1;
+var _a$1, _b;
 // Set DDS files to be loaded as an ArrayBuffer
 _loaders.LoaderResource.setExtensionXhrType('dds', _loaders.LoaderResource.XHR_RESPONSE_TYPE.BUFFER);
 var DDS_MAGIC_SIZE = 4;
@@ -24120,7 +24116,7 @@ var DDS_HEADER_SIZE = 124;
 var DDS_HEADER_PF_SIZE = 32;
 var DDS_HEADER_DX10_SIZE = 20;
 // DDS file format magic word
-var DDS_MAGIC = 0x20534444;
+var DDS_MAGIC = 542327876;
 /**
  * DWORD offsets of the DDS file header fields (relative to file start).
  *
@@ -24300,18 +24296,18 @@ var DXGI_FORMAT;
 })(D3D10_RESOURCE_DIMENSION || (D3D10_RESOURCE_DIMENSION = {}));
 var PF_FLAGS = 1;
 // PIXEL_FORMAT flags
-var DDPF_ALPHA = 0x2;
-var DDPF_FOURCC = 0x4;
-var DDPF_RGB = 0x40;
-var DDPF_YUV = 0x200;
-var DDPF_LUMINANCE = 0x20000;
+var DDPF_ALPHA = 2;
+var DDPF_FOURCC = 4;
+var DDPF_RGB = 64;
+var DDPF_YUV = 512;
+var DDPF_LUMINANCE = 131072;
 // Four character codes for DXTn formats
-var FOURCC_DXT1 = 0x31545844;
-var FOURCC_DXT3 = 0x33545844;
-var FOURCC_DXT5 = 0x35545844;
-var FOURCC_DX10 = 0x30315844;
+var FOURCC_DXT1 = 827611204;
+var FOURCC_DXT3 = 861165636;
+var FOURCC_DXT5 = 894720068;
+var FOURCC_DX10 = 808540228;
 // Cubemap texture flag (for DDS_DX10_FIELDS.MISC_FLAG)
-var DDS_RESOURCE_MISC_TEXTURECUBE = 0x4;
+var DDS_RESOURCE_MISC_TEXTURECUBE = 4;
 /**
  * Maps `FOURCC_*` formats to internal formats (see {@link PIXI.INTERNAL_FORMATS}).
  *
@@ -24321,9 +24317,9 @@ var DDS_RESOURCE_MISC_TEXTURECUBE = 0x4;
  * Maps {@link DXGI_FORMAT} to types/internal-formats (see {@link PIXI.TYPES}, {@link PIXI.INTERNAL_FORMATS})
  *
  * @ignore
- */ var DXGI_TO_FORMAT = (_b$1 = {}, // WEBGL_compressed_texture_s3tc
-_b$1[DXGI_FORMAT.DXGI_FORMAT_BC1_TYPELESS] = INTERNAL_FORMATS.COMPRESSED_RGBA_S3TC_DXT1_EXT, _b$1[DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM] = INTERNAL_FORMATS.COMPRESSED_RGBA_S3TC_DXT1_EXT, _b$1[DXGI_FORMAT.DXGI_FORMAT_BC2_TYPELESS] = INTERNAL_FORMATS.COMPRESSED_RGBA_S3TC_DXT3_EXT, _b$1[DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM] = INTERNAL_FORMATS.COMPRESSED_RGBA_S3TC_DXT3_EXT, _b$1[DXGI_FORMAT.DXGI_FORMAT_BC3_TYPELESS] = INTERNAL_FORMATS.COMPRESSED_RGBA_S3TC_DXT5_EXT, _b$1[DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM] = INTERNAL_FORMATS.COMPRESSED_RGBA_S3TC_DXT5_EXT, // WEBGL_compressed_texture_s3tc_srgb
-_b$1[DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB] = INTERNAL_FORMATS.COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT, _b$1[DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB] = INTERNAL_FORMATS.COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT, _b$1[DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB] = INTERNAL_FORMATS.COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT, _b$1);
+ */ var DXGI_TO_FORMAT = (_b = {}, // WEBGL_compressed_texture_s3tc
+_b[DXGI_FORMAT.DXGI_FORMAT_BC1_TYPELESS] = INTERNAL_FORMATS.COMPRESSED_RGBA_S3TC_DXT1_EXT, _b[DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM] = INTERNAL_FORMATS.COMPRESSED_RGBA_S3TC_DXT1_EXT, _b[DXGI_FORMAT.DXGI_FORMAT_BC2_TYPELESS] = INTERNAL_FORMATS.COMPRESSED_RGBA_S3TC_DXT3_EXT, _b[DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM] = INTERNAL_FORMATS.COMPRESSED_RGBA_S3TC_DXT3_EXT, _b[DXGI_FORMAT.DXGI_FORMAT_BC3_TYPELESS] = INTERNAL_FORMATS.COMPRESSED_RGBA_S3TC_DXT5_EXT, _b[DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM] = INTERNAL_FORMATS.COMPRESSED_RGBA_S3TC_DXT5_EXT, // WEBGL_compressed_texture_s3tc_srgb
+_b[DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB] = INTERNAL_FORMATS.COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT, _b[DXGI_FORMAT.DXGI_FORMAT_BC2_UNORM_SRGB] = INTERNAL_FORMATS.COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT, _b[DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM_SRGB] = INTERNAL_FORMATS.COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT, _b);
 /**
  * @class
  * @memberof PIXI
@@ -24437,7 +24433,7 @@ _b$1[DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB] = INTERNAL_FORMATS.COMPRESSED_SRGB_
     };
     return DDSLoader1;
 }();
-var _a, _b, _c;
+var _a$2, _b$1, _c;
 // Set KTX files to be loaded as an ArrayBuffer
 _loaders.LoaderResource.setExtensionXhrType('ktx', _loaders.LoaderResource.XHR_RESPONSE_TYPE.BUFFER);
 /**
@@ -24446,25 +24442,25 @@ _loaders.LoaderResource.setExtensionXhrType('ktx', _loaders.LoaderResource.XHR_R
  * @see https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/#2.1
  * @ignore
  */ var FILE_IDENTIFIER = [
-    0xAB,
-    0x4B,
-    0x54,
-    0x58,
-    0x20,
-    0x31,
-    0x31,
-    0xBB,
-    0x0D,
-    0x0A,
-    0x1A,
-    0x0A
+    171,
+    75,
+    84,
+    88,
+    32,
+    49,
+    49,
+    187,
+    13,
+    10,
+    26,
+    10
 ];
 /**
  * The value stored in the "endianness" field.
  *
  * @see https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/#2.2
  * @ignore
- */ var ENDIANNESS = 0x04030201;
+ */ var ENDIANNESS = 67305985;
 /**
  * Byte offsets of the KTX file header fields
  *
@@ -24494,12 +24490,12 @@ _loaders.LoaderResource.setExtensionXhrType('ktx', _loaders.LoaderResource.XHR_R
  * Maps {@link PIXI.TYPES} to the bytes taken per component, excluding those ones that are bit-fields.
  *
  * @ignore
- */ var TYPES_TO_BYTES_PER_COMPONENT = (_a = {}, _a[_constants.TYPES.UNSIGNED_BYTE] = 1, _a[_constants.TYPES.UNSIGNED_SHORT] = 2, _a[_constants.TYPES.INT] = 4, _a[_constants.TYPES.UNSIGNED_INT] = 4, _a[_constants.TYPES.FLOAT] = 4, _a[_constants.TYPES.HALF_FLOAT] = 8, _a);
+ */ var TYPES_TO_BYTES_PER_COMPONENT = (_a$2 = {}, _a$2[_constants.TYPES.UNSIGNED_BYTE] = 1, _a$2[_constants.TYPES.UNSIGNED_SHORT] = 2, _a$2[_constants.TYPES.INT] = 4, _a$2[_constants.TYPES.UNSIGNED_INT] = 4, _a$2[_constants.TYPES.FLOAT] = 4, _a$2[_constants.TYPES.HALF_FLOAT] = 8, _a$2);
 /**
  * Number of components in each {@link PIXI.FORMATS}
  *
  * @ignore
- */ var FORMATS_TO_COMPONENTS = (_b = {}, _b[_constants.FORMATS.RGBA] = 4, _b[_constants.FORMATS.RGB] = 3, _b[_constants.FORMATS.RG] = 2, _b[_constants.FORMATS.RED] = 1, _b[_constants.FORMATS.LUMINANCE] = 1, _b[_constants.FORMATS.LUMINANCE_ALPHA] = 2, _b[_constants.FORMATS.ALPHA] = 1, _b);
+ */ var FORMATS_TO_COMPONENTS = (_b$1 = {}, _b$1[_constants.FORMATS.RGBA] = 4, _b$1[_constants.FORMATS.RGB] = 3, _b$1[_constants.FORMATS.RG] = 2, _b$1[_constants.FORMATS.RED] = 1, _b$1[_constants.FORMATS.LUMINANCE] = 1, _b$1[_constants.FORMATS.LUMINANCE_ALPHA] = 2, _b$1[_constants.FORMATS.ALPHA] = 1, _b$1);
 /**
  * Number of bytes per pixel in bit-field types in {@link PIXI.TYPES}
  *
@@ -24710,8 +24706,8 @@ parcelHelpers.export(exports, "ParticleContainer", ()=>ParticleContainer
 parcelHelpers.export(exports, "ParticleRenderer", ()=>ParticleRenderer
 );
 /*!
- * @pixi/particle-container - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/particle-container - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/particle-container is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -24819,7 +24815,7 @@ function __extends(d, b) {
         _this.setProperties(properties);
         _this._tint = 0;
         _this.tintRgb = new Float32Array(4);
-        _this.tint = 0xFFFFFF;
+        _this.tint = 16777215;
         return _this;
     }
     /**
@@ -25316,7 +25312,7 @@ var vertex = "attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\nat
             var premultiplied = sprite._texture.baseTexture.alphaMode > 0;
             var alpha = sprite.alpha;
             // we dont call extra function if alpha is 1.0, that's faster
-            var argb = alpha < 1.0 && premultiplied ? _utils.premultiplyTint(sprite._tintRGB, alpha) : sprite._tintRGB + (alpha * 255 << 24);
+            var argb = alpha < 1 && premultiplied ? _utils.premultiplyTint(sprite._tintRGB, alpha) : sprite._tintRGB + (alpha * 255 << 24);
             array[offset] = argb;
             array[offset + stride] = argb;
             array[offset + stride * 2] = argb;
@@ -25347,8 +25343,8 @@ parcelHelpers.export(exports, "Prepare", ()=>Prepare
 parcelHelpers.export(exports, "TimeLimiter", ()=>TimeLimiter
 );
 /*!
- * @pixi/prepare - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/prepare - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/prepare is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -25837,8 +25833,8 @@ parcelHelpers.export(exports, "LineStyle", ()=>LineStyle
 parcelHelpers.export(exports, "graphicsUtils", ()=>graphicsUtils
 );
 /*!
- * @pixi/graphics - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/graphics - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/graphics is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -25923,8 +25919,8 @@ var _display = require("@pixi/display");
          * The hex color value used when coloring the Graphics object.
          *
          * @default 0xFFFFFF
-         */ this.color = 0xFFFFFF;
-        /** The alpha value used when filling the Graphics object. */ this.alpha = 1.0;
+         */ this.color = 16777215;
+        /** The alpha value used when filling the Graphics object. */ this.alpha = 1;
         /**
          * The texture to be used for the fill.
          *
@@ -25948,7 +25944,7 @@ var _display = require("@pixi/display");
         return obj;
     };
     /** Reset */ FillStyle1.prototype.reset = function() {
-        this.color = 0xFFFFFF;
+        this.color = 16777215;
         this.alpha = 1;
         this.texture = _core.Texture.WHITE;
         this.matrix = null;
@@ -26723,7 +26719,7 @@ function fixOrientation(points, hole) {
         var a2 = y2 - y1;
         var b2 = x2 - x1;
         var mm = Math.abs(a1 * b2 - b1 * a2);
-        if (mm < 1.0e-8 || radius === 0) {
+        if (mm < 0.00000001 || radius === 0) {
             if (points[points.length - 2] !== x1 || points[points.length - 1] !== y1) points.push(x1, y1);
             return null;
         }
@@ -26809,28 +26805,28 @@ function fixOrientation(points, hole) {
      * @return - Length of bezier curve
      */ BezierUtils1.curveLength = function(fromX, fromY, cpX, cpY, cpX2, cpY2, toX, toY) {
         var n = 10;
-        var result = 0.0;
-        var t = 0.0;
-        var t2 = 0.0;
-        var t3 = 0.0;
-        var nt = 0.0;
-        var nt2 = 0.0;
-        var nt3 = 0.0;
-        var x = 0.0;
-        var y = 0.0;
-        var dx = 0.0;
-        var dy = 0.0;
+        var result = 0;
+        var t = 0;
+        var t2 = 0;
+        var t3 = 0;
+        var nt = 0;
+        var nt2 = 0;
+        var nt3 = 0;
+        var x = 0;
+        var y = 0;
+        var dx = 0;
+        var dy = 0;
         var prevX = fromX;
         var prevY = fromY;
         for(var i = 1; i <= n; ++i){
             t = i / n;
             t2 = t * t;
             t3 = t2 * t;
-            nt = 1.0 - t;
+            nt = 1 - t;
             nt2 = nt * nt;
             nt3 = nt2 * nt;
-            x = nt3 * fromX + 3.0 * nt2 * t * cpX + 3.0 * nt * t2 * cpX2 + t3 * toX;
-            y = nt3 * fromY + 3.0 * nt2 * t * cpY + 3 * nt * t2 * cpY2 + t3 * toY;
+            x = nt3 * fromX + 3 * nt2 * t * cpX + 3 * nt * t2 * cpX2 + t3 * toX;
+            y = nt3 * fromY + 3 * nt2 * t * cpY + 3 * nt * t2 * cpY2 + t3 * toY;
             dx = prevX - x;
             dy = prevY - y;
             prevX = x;
@@ -26895,19 +26891,19 @@ function fixOrientation(points, hole) {
      * @param toY - y-coordinate of curve end point
      * @return - Length of quadratic curve
      */ QuadraticUtils1.curveLength = function(fromX, fromY, cpX, cpY, toX, toY) {
-        var ax = fromX - 2.0 * cpX + toX;
-        var ay = fromY - 2.0 * cpY + toY;
-        var bx = 2.0 * cpX - 2.0 * fromX;
-        var by = 2.0 * cpY - 2.0 * fromY;
-        var a = 4.0 * (ax * ax + ay * ay);
-        var b = 4.0 * (ax * bx + ay * by);
+        var ax = fromX - 2 * cpX + toX;
+        var ay = fromY - 2 * cpY + toY;
+        var bx = 2 * cpX - 2 * fromX;
+        var by = 2 * cpY - 2 * fromY;
+        var a = 4 * (ax * ax + ay * ay);
+        var b = 4 * (ax * bx + ay * by);
         var c = bx * bx + by * by;
-        var s = 2.0 * Math.sqrt(a + b + c);
+        var s = 2 * Math.sqrt(a + b + c);
         var a2 = Math.sqrt(a);
-        var a32 = 2.0 * a * a2;
-        var c2 = 2.0 * Math.sqrt(c);
+        var a32 = 2 * a * a2;
+        var c2 = 2 * Math.sqrt(c);
         var ba = b / a2;
-        return (a32 * s + a2 * b * (s - c2) + (4.0 * c * a - b * b) * Math.log((2.0 * a2 + ba + s) / (ba + c2))) / (4.0 * a32);
+        return (a32 * s + a2 * b * (s - c2) + (4 * c * a - b * b) * Math.log((2 * a2 + ba + s) / (ba + c2))) / (4 * a32);
     };
     /**
      * Calculate the points for a quadratic bezier curve and then draws it.
@@ -27043,7 +27039,7 @@ var tmpBounds = new _display.Bounds();
         /**
          * Minimal distance between points that are considered different.
          * Affects line tesselation.
-         */ _this.closePointEps = 1e-4;
+         */ _this.closePointEps = 0.0001;
         /** Padding to add to the bounds. */ _this.boundsPadding = 0;
         _this.uvsFloat32 = null;
         _this.indicesUint16 = null;
@@ -27282,7 +27278,7 @@ var tmpBounds = new _display.Bounds();
         // prevent allocation when length is same as buffer
         if (this.indicesUint16 && this.indices.length === this.indicesUint16.length) this.indicesUint16.set(this.indices);
         else {
-            var need32 = attrib > 0xffff && allow32Indices;
+            var need32 = attrib > 65535 && allow32Indices;
             this.indicesUint16 = need32 ? new Uint32Array(this.indices) : new Uint16Array(this.indices);
         }
         // TODO make this a const..
@@ -27470,12 +27466,8 @@ var tmpBounds = new _display.Bounds();
             var type = data.type;
             var lineStyle = data.lineStyle;
             var nextMatrix = data.matrix || _math.Matrix.IDENTITY;
-            var lineWidth = 0.0;
-            if (lineStyle && lineStyle.visible) {
-                lineWidth = lineStyle.width;
-                if (type !== _math.SHAPES.POLY || data.fillStyle.visible) lineWidth *= Math.max(0, lineStyle.alignment);
-                else lineWidth *= Math.max(lineStyle.alignment, 1 - lineStyle.alignment);
-            }
+            var lineWidth = 0;
+            if (lineStyle && lineStyle.visible) lineWidth = lineStyle.width * Math.max(0, lineStyle.alignment);
             if (curMatrix !== nextMatrix) {
                 if (!sequenceBounds.isEmpty()) {
                     bounds.addBoundsMatrix(sequenceBounds, curMatrix);
@@ -27525,7 +27517,7 @@ var tmpBounds = new _display.Bounds();
      */ GraphicsGeometry1.prototype.addColors = function(colors, color, alpha, size, offset) {
         if (offset === void 0) offset = 0;
         // TODO use the premultiply bits Ivan added
-        var rgb = (color >> 16) + (color & 0xff00) + ((color & 0xff) << 16);
+        var rgb = (color >> 16) + (color & 65280) + ((color & 255) << 16);
         var rgba = _utils.premultiplyTint(rgb, alpha);
         colors.length = Math.max(colors.length, offset + size);
         for(var i = 0; i < size; i++)colors[offset + i] = rgba;
@@ -27573,7 +27565,7 @@ var tmpBounds = new _display.Bounds();
      * @param size - how many points to adjust
      */ GraphicsGeometry1.prototype.adjustUvs = function(uvs, texture, start, size) {
         var baseTexture = texture.baseTexture;
-        var eps = 1e-6;
+        var eps = 0.000001;
         var finish = start + size * 2;
         var frame = texture.frame;
         var scaleX = frame.width / baseTexture.width;
@@ -27643,7 +27635,7 @@ var tmpBounds = new _display.Bounds();
     /** Reset the line style to default. */ LineStyle1.prototype.reset = function() {
         _super.prototype.reset.call(this);
         // Override default line style color
-        this.color = 0x0;
+        this.color = 0;
         this.alignment = 0.5;
         this.width = 0;
         this.native = false;
@@ -27715,7 +27707,7 @@ var DEFAULT_SHADERS = {};
          * @default false
          */ _this._transformID = -1;
         // Set default
-        _this.tint = 0xFFFFFF;
+        _this.tint = 16777215;
         _this.blendMode = _constants.BLEND_MODES.NORMAL;
         return _this;
     }
@@ -27798,7 +27790,7 @@ var DEFAULT_SHADERS = {};
     });
     Graphics1.prototype.lineStyle = function(options, color, alpha, alignment, native) {
         if (options === void 0) options = null;
-        if (color === void 0) color = 0x0;
+        if (color === void 0) color = 0;
         if (alpha === void 0) alpha = 1;
         if (alignment === void 0) alignment = 0.5;
         if (native === void 0) native = false;
@@ -27834,7 +27826,7 @@ var DEFAULT_SHADERS = {};
         options = Object.assign({
             width: 0,
             texture: _core.Texture.WHITE,
-            color: options && options.texture ? 0xFFFFFF : 0x0,
+            color: options && options.texture ? 16777215 : 0,
             alpha: 1,
             matrix: null,
             alignment: 0.5,
@@ -28046,7 +28038,7 @@ var DEFAULT_SHADERS = {};
         // Apply defaults
         options = Object.assign({
             texture: _core.Texture.WHITE,
-            color: 0xFFFFFF,
+            color: 16777215,
             alpha: 1,
             matrix: null
         }, options);
@@ -28251,9 +28243,9 @@ var DEFAULT_SHADERS = {};
         // lets set the transfomr
         uniforms.translationMatrix = this.transform.worldTransform;
         // and then lets set the tint..
-        uniforms.tint[0] = (tint >> 16 & 0xFF) / 255 * worldAlpha;
-        uniforms.tint[1] = (tint >> 8 & 0xFF) / 255 * worldAlpha;
-        uniforms.tint[2] = (tint & 0xFF) / 255 * worldAlpha;
+        uniforms.tint[0] = (tint >> 16 & 255) / 255 * worldAlpha;
+        uniforms.tint[1] = (tint >> 8 & 255) / 255 * worldAlpha;
+        uniforms.tint[2] = (tint & 255) / 255 * worldAlpha;
         uniforms.tint[3] = worldAlpha;
         // the first draw call, we can set the uniforms of the shader directly here.
         // this means that we can tack advantage of the sync function of pixi!
@@ -28284,7 +28276,7 @@ var DEFAULT_SHADERS = {};
             // and that only gets created if we actually need it..
             // but may be more than one plugins for graphics
             if (!DEFAULT_SHADERS[pluginName]) {
-                var MAX_TEXTURES = renderer.plugins[pluginName].MAX_TEXTURES;
+                var MAX_TEXTURES = renderer.plugins.batch.MAX_TEXTURES;
                 var sampleValues = new Int32Array(MAX_TEXTURES);
                 for(var i = 0; i < MAX_TEXTURES; i++)sampleValues[i] = i;
                 var uniforms = {
@@ -28335,7 +28327,7 @@ var DEFAULT_SHADERS = {};
                 var b = tintRGB[2] * batchTint[2] * 255;
                 // TODO Ivan, can this be done in one go?
                 var color = (r << 16) + (g << 8) + (b | 0);
-                batch._tintRGB = (color >> 16) + (color & 0xff00) + ((color & 0xff) << 16);
+                batch._tintRGB = (color >> 16) + (color & 65280) + ((color & 255) << 16);
             }
         }
     };
@@ -28474,8 +28466,8 @@ parcelHelpers.export(exports, "TextMetrics", ()=>TextMetrics
 parcelHelpers.export(exports, "TextStyle", ()=>TextStyle
 );
 /*!
- * @pixi/text - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/text - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/text is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -29206,8 +29198,8 @@ function getColor(color) {
      * @param wordWrap - Override for if word-wrap should be applied to the text.
      * @param canvas - optional specification of the canvas to use for measuring.
      * @return Measured width and height of the text.
-     */ TextMetrics1.measureText = function(text, style, wordWrap, canvas) {
-        if (canvas === void 0) canvas = TextMetrics1._canvas;
+     */ TextMetrics1.measureText = function(text, style, wordWrap, canvas1) {
+        if (canvas1 === void 0) canvas1 = TextMetrics1._canvas;
         wordWrap = wordWrap === undefined || wordWrap === null ? style.wordWrap : wordWrap;
         var font = style.toFontString();
         var fontProperties = TextMetrics1.measureFont(font);
@@ -29217,9 +29209,9 @@ function getColor(color) {
             fontProperties.fontSize = style.fontSize;
             fontProperties.ascent = style.fontSize;
         }
-        var context = canvas.getContext('2d');
+        var context = canvas1.getContext('2d');
         context.font = font;
-        var outputText = wordWrap ? TextMetrics1.wordWrap(text, style, canvas) : text;
+        var outputText = wordWrap ? TextMetrics1.wordWrap(text, style, canvas1) : text;
         var lines = outputText.split(/(?:\r\n|\r|\n)/);
         var lineWidths = new Array(lines.length);
         var maxLineWidth = 0;
@@ -29243,9 +29235,9 @@ function getColor(color) {
      * @param style - the style to use when wrapping
      * @param canvas - optional specification of the canvas to use for measuring.
      * @return New string with new lines applied where required
-     */ TextMetrics1.wordWrap = function(text, style, canvas) {
-        if (canvas === void 0) canvas = TextMetrics1._canvas;
-        var context = canvas.getContext('2d');
+     */ TextMetrics1.wordWrap = function(text, style, canvas2) {
+        if (canvas2 === void 0) canvas2 = TextMetrics1._canvas;
+        var context = canvas2.getContext('2d');
         var width = 0;
         var line = '';
         var lines = '';
@@ -29534,7 +29526,7 @@ function getColor(color) {
             descent: 0,
             fontSize: 0
         };
-        var canvas = TextMetrics1._canvas;
+        var canvas3 = TextMetrics1._canvas;
         var context = TextMetrics1._context;
         context.font = font;
         var metricsString = TextMetrics1.METRICS_STRING + TextMetrics1.BASELINE_SYMBOL;
@@ -29542,8 +29534,8 @@ function getColor(color) {
         var baseline = Math.ceil(context.measureText(TextMetrics1.BASELINE_SYMBOL).width);
         var height = Math.ceil(TextMetrics1.HEIGHT_MULTIPLIER * baseline);
         baseline = baseline * TextMetrics1.BASELINE_MULTIPLIER | 0;
-        canvas.width = width;
-        canvas.height = height;
+        canvas3.width = width;
+        canvas3.height = height;
         context.fillStyle = '#f00';
         context.fillRect(0, 0, width, height);
         context.font = font;
@@ -29591,47 +29583,6 @@ function getColor(color) {
         if (font) delete TextMetrics1._fonts[font];
         else TextMetrics1._fonts = {};
     };
-    Object.defineProperty(TextMetrics1, "_canvas", {
-        /**
-         * Cached canvas element for measuring text
-         * TODO: this should be private, but isn't because of backward compat, will fix later.
-         *
-         * @ignore
-         */ get: function() {
-            if (!TextMetrics1.__canvas) {
-                var canvas = void 0;
-                try {
-                    // OffscreenCanvas2D measureText can be up to 40% faster.
-                    var c = new OffscreenCanvas(0, 0);
-                    var context = c.getContext('2d');
-                    if (context && context.measureText) {
-                        TextMetrics1.__canvas = c;
-                        return c;
-                    }
-                    canvas = document.createElement('canvas');
-                } catch (ex) {
-                    canvas = document.createElement('canvas');
-                }
-                canvas.width = canvas.height = 10;
-                TextMetrics1.__canvas = canvas;
-            }
-            return TextMetrics1.__canvas;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(TextMetrics1, "_context", {
-        /**
-         * TODO: this should be private, but isn't because of backward compat, will fix later.
-         *
-         * @ignore
-         */ get: function() {
-            if (!TextMetrics1.__context) TextMetrics1.__context = TextMetrics1._canvas.getContext('2d');
-            return TextMetrics1.__context;
-        },
-        enumerable: false,
-        configurable: true
-    });
     return TextMetrics1;
 }();
 /**
@@ -29643,7 +29594,33 @@ function getColor(color) {
  * @property {number} fontSize - Font size from ascent to descent
  * @memberof PIXI.TextMetrics
  * @private
- */ /**
+ */ var canvas = function() {
+    try {
+        // OffscreenCanvas2D measureText can be up to 40% faster.
+        var c = new OffscreenCanvas(0, 0);
+        var context = c.getContext('2d');
+        if (context && context.measureText) return c;
+        return document.createElement('canvas');
+    } catch (ex) {
+        return document.createElement('canvas');
+    }
+}();
+canvas.width = canvas.height = 10;
+/**
+ * Cached canvas element for measuring text
+ *
+ * @memberof PIXI.TextMetrics
+ * @type {HTMLCanvasElement}
+ * @private
+ */ TextMetrics._canvas = canvas;
+/**
+ * Cache for context to use.
+ *
+ * @memberof PIXI.TextMetrics
+ * @type {CanvasRenderingContext2D}
+ * @private
+ */ TextMetrics._context = canvas.getContext('2d');
+/**
  * Cache of {@see PIXI.TextMetrics.FontMetrics} objects.
  *
  * @memberof PIXI.TextMetrics
@@ -29686,7 +29663,7 @@ function getColor(color) {
  * @name HEIGHT_MULTIPLIER
  * @type {number}
  * @default 2.00
- */ TextMetrics.HEIGHT_MULTIPLIER = 2.0;
+ */ TextMetrics.HEIGHT_MULTIPLIER = 2;
 /**
  * Cache of new line chars.
  *
@@ -29694,8 +29671,8 @@ function getColor(color) {
  * @type {number[]}
  * @private
  */ TextMetrics._newlines = [
-    0x000A,
-    0x000D
+    10,
+    13
 ];
 /**
  * Cache of breaking spaces.
@@ -29704,20 +29681,20 @@ function getColor(color) {
  * @type {number[]}
  * @private
  */ TextMetrics._breakingSpaces = [
-    0x0009,
-    0x0020,
-    0x2000,
-    0x2001,
-    0x2002,
-    0x2003,
-    0x2004,
-    0x2005,
-    0x2006,
-    0x2008,
-    0x2009,
-    0x200A,
-    0x205F,
-    0x3000
+    9,
+    32,
+    8192,
+    8193,
+    8194,
+    8195,
+    8196,
+    8197,
+    8198,
+    8200,
+    8201,
+    8202,
+    8287,
+    12288
 ];
 /**
  * A number, or a string containing a number.
@@ -29760,21 +29737,21 @@ function getColor(color) {
      * @param text - The string that you would like the text to display
      * @param {object|PIXI.TextStyle} [style] - The style parameters
      * @param canvas - The canvas element for drawing text
-     */ function Text1(text, style, canvas) {
+     */ function Text1(text, style, canvas4) {
         var _this = this;
         var ownCanvas = false;
-        if (!canvas) {
-            canvas = document.createElement('canvas');
+        if (!canvas4) {
+            canvas4 = document.createElement('canvas');
             ownCanvas = true;
         }
-        canvas.width = 3;
-        canvas.height = 3;
-        var texture = _core.Texture.from(canvas);
+        canvas4.width = 3;
+        canvas4.height = 3;
+        var texture = _core.Texture.from(canvas4);
         texture.orig = new _math.Rectangle();
         texture.trim = new _math.Rectangle();
         _this = _super.call(this, texture) || this;
         _this._ownCanvas = ownCanvas;
-        _this.canvas = canvas;
+        _this.canvas = canvas4;
         _this.context = _this.canvas.getContext('2d');
         _this._resolution = _settings.settings.RESOLUTION;
         _this._autoResolution = true;
@@ -29931,12 +29908,12 @@ function getColor(color) {
         }
     };
     /** Updates texture size based on canvas size. */ Text1.prototype.updateTexture = function() {
-        var canvas = this.canvas;
+        var canvas5 = this.canvas;
         if (this._style.trim) {
-            var trimmed = _utils.trimCanvas(canvas);
+            var trimmed = _utils.trimCanvas(canvas5);
             if (trimmed.data) {
-                canvas.width = trimmed.width;
-                canvas.height = trimmed.height;
+                canvas5.width = trimmed.width;
+                canvas5.height = trimmed.height;
                 this.context.putImageData(trimmed.data, 0, 0);
             }
         }
@@ -29944,15 +29921,15 @@ function getColor(color) {
         var style = this._style;
         var padding = style.trim ? 0 : style.padding;
         var baseTexture = texture.baseTexture;
-        texture.trim.width = texture._frame.width = canvas.width / this._resolution;
-        texture.trim.height = texture._frame.height = canvas.height / this._resolution;
+        texture.trim.width = texture._frame.width = canvas5.width / this._resolution;
+        texture.trim.height = texture._frame.height = canvas5.height / this._resolution;
         texture.trim.x = -padding;
         texture.trim.y = -padding;
         texture.orig.width = texture._frame.width - padding * 2;
         texture.orig.height = texture._frame.height - padding * 2;
         // call sprite onTextureUpdate to update scale if _width or _height were set
         this._onTextureUpdate();
-        baseTexture.setRealSize(canvas.width, canvas.height, this._resolution);
+        baseTexture.setRealSize(canvas5.width, canvas5.height, this._resolution);
         texture.updateUvs();
         // Recursively updates transform of all objects from the root to this one
         this._recursivePostUpdateTransform();
@@ -30197,8 +30174,8 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Sprite", ()=>Sprite
 );
 /*!
- * @pixi/sprite - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/sprite - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/sprite is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -30280,9 +30257,9 @@ var indices = new Uint16Array([
         _this._height = 0;
         _this._tint = null;
         _this._tintRGB = null;
-        _this.tint = 0xFFFFFF;
+        _this.tint = 16777215;
         _this.blendMode = _constants.BLEND_MODES.NORMAL;
-        _this._cachedTint = 0xFFFFFF;
+        _this._cachedTint = 16777215;
         _this.uvs = null;
         // call texture setter
         _this.texture = texture || _core.Texture.EMPTY;
@@ -30306,7 +30283,7 @@ var indices = new Uint16Array([
     /** When the texture is updated, this event will fire to update the scale and frame. */ Sprite1.prototype._onTextureUpdate = function() {
         this._textureID = -1;
         this._textureTrimmedID = -1;
-        this._cachedTint = 0xFFFFFF;
+        this._cachedTint = 16777215;
         // so if _width is 0 then width was not set..
         if (this._width) this.scale.x = _utils.sign(this.scale.x) * this._width / this._texture.orig.width;
         if (this._height) this.scale.y = _utils.sign(this.scale.y) * this._height / this._texture.orig.height;
@@ -30582,7 +30559,7 @@ var indices = new Uint16Array([
         },
         set: function(value) {
             this._tint = value;
-            this._tintRGB = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
+            this._tintRGB = (value >> 16) + (value & 65280) + ((value & 255) << 16);
         },
         enumerable: false,
         configurable: true
@@ -30595,7 +30572,7 @@ var indices = new Uint16Array([
             if (this._texture === value) return;
             if (this._texture) this._texture.off('update', this._onTextureUpdate, this);
             this._texture = value || _core.Texture.EMPTY;
-            this._cachedTint = 0xFFFFFF;
+            this._cachedTint = 16777215;
             this._textureID = -1;
             this._textureTrimmedID = -1;
             if (value) {
@@ -30618,8 +30595,8 @@ parcelHelpers.export(exports, "Spritesheet", ()=>Spritesheet
 parcelHelpers.export(exports, "SpritesheetLoader", ()=>SpritesheetLoader
 );
 /*!
- * @pixi/spritesheet - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/spritesheet - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/spritesheet is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -30898,8 +30875,8 @@ parcelHelpers.export(exports, "TilingSprite", ()=>TilingSprite
 parcelHelpers.export(exports, "TilingSpriteRenderer", ()=>TilingSpriteRenderer
 );
 /*!
- * @pixi/sprite-tiling - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/sprite-tiling - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/sprite-tiling is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -31009,7 +30986,7 @@ var tempPoint = new _math.Point();
      * @protected
      */ TilingSprite1.prototype._onTextureUpdate = function() {
         if (this.uvMatrix) this.uvMatrix.texture = this._texture;
-        this._cachedTint = 0xFFFFFF;
+        this._cachedTint = 16777215;
     };
     /**
      * Renders the object using the WebGL renderer
@@ -31166,15 +31143,15 @@ var tempMat = new _math.Matrix();
         var vertices = quad.vertices;
         vertices[0] = vertices[6] = ts._width * -ts.anchor.x;
         vertices[1] = vertices[3] = ts._height * -ts.anchor.y;
-        vertices[2] = vertices[4] = ts._width * (1.0 - ts.anchor.x);
-        vertices[5] = vertices[7] = ts._height * (1.0 - ts.anchor.y);
+        vertices[2] = vertices[4] = ts._width * (1 - ts.anchor.x);
+        vertices[5] = vertices[7] = ts._height * (1 - ts.anchor.y);
         var anchorX = ts.uvRespectAnchor ? ts.anchor.x : 0;
         var anchorY = ts.uvRespectAnchor ? ts.anchor.y : 0;
         vertices = quad.uvs;
         vertices[0] = vertices[6] = -anchorX;
         vertices[1] = vertices[3] = -anchorY;
-        vertices[2] = vertices[4] = 1.0 - anchorX;
-        vertices[5] = vertices[7] = 1.0 - anchorY;
+        vertices[2] = vertices[4] = 1 - anchorX;
+        vertices[5] = vertices[7] = 1 - anchorY;
         quad.invalidate();
         var tex = ts._texture;
         var baseTex = tex.baseTexture;
@@ -31230,8 +31207,8 @@ parcelHelpers.export(exports, "BitmapFontLoader", ()=>BitmapFontLoader
 parcelHelpers.export(exports, "BitmapText", ()=>BitmapText
 );
 /*!
- * @pixi/text-bitmap - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/text-bitmap - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/text-bitmap is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -32077,7 +32054,7 @@ var charRenderDataPool = [];
          * Private tracker for the current tint.
          *
          * @private
-         */ _this._tint = 0xFFFFFF;
+         */ _this._tint = 16777215;
         // Apply the defaults
         var _a = Object.assign({}, BitmapText1.styleDefaults, style), align = _a.align, tint = _a.tint, maxWidth = _a.maxWidth, letterSpacing = _a.letterSpacing, fontName = _a.fontName, fontSize = _a.fontSize;
         if (!BitmapFont.available[fontName]) throw new Error("Missing BitmapFont \"" + fontName + "\"");
@@ -32088,7 +32065,7 @@ var charRenderDataPool = [];
         _this._tint = tint;
         _this._fontName = fontName;
         _this._fontSize = fontSize || BitmapFont.available[fontName].size;
-        _this.text = text;
+        _this._text = text;
         _this._maxWidth = maxWidth;
         _this._maxLineHeight = 0;
         _this._letterSpacing = letterSpacing;
@@ -32577,7 +32554,7 @@ var charRenderDataPool = [];
     };
     BitmapText1.styleDefaults = {
         align: 'left',
-        tint: 0xFFFFFF,
+        tint: 16777215,
         maxWidth: 0,
         letterSpacing: 0
     };
@@ -32697,8 +32674,8 @@ parcelHelpers.export(exports, "MeshGeometry", ()=>MeshGeometry
 parcelHelpers.export(exports, "MeshMaterial", ()=>MeshMaterial
 );
 /*!
- * @pixi/mesh - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/mesh - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/mesh is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -33103,7 +33080,7 @@ var vertex = "attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\n
         };
         // Set defaults
         options = Object.assign({
-            tint: 0xFFFFFF,
+            tint: 16777215,
             alpha: 1,
             pluginName: 'batch'
         }, options);
@@ -33157,7 +33134,7 @@ var vertex = "attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\n
          */ set: function(value) {
             if (value === this._tint) return;
             this._tint = value;
-            this._tintRGB = (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
+            this._tintRGB = (value >> 16) + (value & 65280) + ((value & 255) << 16);
             this._colorDirty = true;
         },
         enumerable: false,
@@ -33227,8 +33204,8 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "AlphaFilter", ()=>AlphaFilter
 );
 /*!
- * @pixi/filter-alpha - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/filter-alpha - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/filter-alpha is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -33283,7 +33260,7 @@ var fragment = "varying vec2 vTextureCoord;\n\nuniform sampler2D uSampler;\nunif
     /**
      * @param alpha - Amount of alpha from 0 to 1, where 0 is transparent
      */ function AlphaFilter1(alpha) {
-        if (alpha === void 0) alpha = 1.0;
+        if (alpha === void 0) alpha = 1;
         var _this = _super.call(this, _core.defaultVertex, fragment, {
             uAlpha: 1
         }) || this;
@@ -33315,8 +33292,8 @@ parcelHelpers.export(exports, "BlurFilter", ()=>BlurFilter
 parcelHelpers.export(exports, "BlurFilterPass", ()=>BlurFilterPass
 );
 /*!
- * @pixi/filter-blur - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/filter-blur - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/filter-blur is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -33446,8 +33423,8 @@ function generateBlurFragSource(kernelSize) {
     return fragSource;
 }
 /*!
- * @pixi/constants - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/constants - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/constants is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -34186,8 +34163,8 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "ColorMatrixFilter", ()=>ColorMatrixFilter
 );
 /*!
- * @pixi/filter-color-matrix - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/filter-color-matrix - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/filter-color-matrix is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -34373,9 +34350,9 @@ var fragment = "varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nunifor
      * @param multiply - if true, current matrix and matrix are multiplied. If false,
      *  just set the current matrix with @param matrix
      */ ColorMatrixFilter1.prototype.tint = function(color, multiply) {
-        var r = color >> 16 & 0xff;
-        var g = color >> 8 & 0xff;
-        var b = color & 0xff;
+        var r = color >> 16 & 255;
+        var g = color >> 8 & 255;
+        var b = color & 255;
         var matrix = [
             r / 255,
             0,
@@ -34485,15 +34462,15 @@ var fragment = "varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nunifor
          see http://stackoverflow.com/questions/8507885/shift-hue-of-an-rgb-color/8510751#8510751
          */ var w = 1 / 3;
         var sqrW = sqrt(w); // weight is
-        var a00 = cosR + (1.0 - cosR) * w;
-        var a01 = w * (1.0 - cosR) - sqrW * sinR;
-        var a02 = w * (1.0 - cosR) + sqrW * sinR;
-        var a10 = w * (1.0 - cosR) + sqrW * sinR;
-        var a11 = cosR + w * (1.0 - cosR);
-        var a12 = w * (1.0 - cosR) - sqrW * sinR;
-        var a20 = w * (1.0 - cosR) - sqrW * sinR;
-        var a21 = w * (1.0 - cosR) + sqrW * sinR;
-        var a22 = cosR + w * (1.0 - cosR);
+        var a00 = cosR + (1 - cosR) * w;
+        var a01 = w * (1 - cosR) - sqrW * sinR;
+        var a02 = w * (1 - cosR) + sqrW * sinR;
+        var a10 = w * (1 - cosR) + sqrW * sinR;
+        var a11 = cosR + w * (1 - cosR);
+        var a12 = w * (1 - cosR) - sqrW * sinR;
+        var a20 = w * (1 - cosR) - sqrW * sinR;
+        var a21 = w * (1 - cosR) + sqrW * sinR;
+        var a22 = cosR + w * (1 - cosR);
         var matrix = [
             a00,
             a01,
@@ -34847,14 +34824,14 @@ var fragment = "varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nunifor
      */ ColorMatrixFilter1.prototype.colorTone = function(desaturation, toned, lightColor, darkColor, multiply) {
         desaturation = desaturation || 0.2;
         toned = toned || 0.15;
-        lightColor = lightColor || 0xFFE580;
-        darkColor = darkColor || 0x338000;
-        var lR = (lightColor >> 16 & 0xFF) / 255;
-        var lG = (lightColor >> 8 & 0xFF) / 255;
-        var lB = (lightColor & 0xFF) / 255;
-        var dR = (darkColor >> 16 & 0xFF) / 255;
-        var dG = (darkColor >> 8 & 0xFF) / 255;
-        var dB = (darkColor & 0xFF) / 255;
+        lightColor = lightColor || 16770432;
+        darkColor = darkColor || 3375104;
+        var lR = (lightColor >> 16 & 255) / 255;
+        var lG = (lightColor >> 8 & 255) / 255;
+        var lB = (lightColor & 255) / 255;
+        var dR = (darkColor >> 16 & 255) / 255;
+        var dG = (darkColor >> 8 & 255) / 255;
+        var dB = (darkColor & 255) / 255;
         var matrix = [
             0.3,
             0.59,
@@ -34900,7 +34877,7 @@ var fragment = "varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nunifor
             0,
             0,
             intensity,
-            intensity * 2.0,
+            intensity * 2,
             0,
             0,
             0,
@@ -35049,8 +35026,8 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "DisplacementFilter", ()=>DisplacementFilter
 );
 /*!
- * @pixi/filter-displacement - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/filter-displacement - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/filter-displacement is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -35179,8 +35156,8 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "FXAAFilter", ()=>FXAAFilter
 );
 /*!
- * @pixi/filter-fxaa - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/filter-fxaa - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/filter-fxaa is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -35239,8 +35216,8 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "NoiseFilter", ()=>NoiseFilter
 );
 /*!
- * @pixi/filter-noise - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/filter-noise - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/filter-noise is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -35332,8 +35309,8 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "CacheData", ()=>CacheData
 );
 /*!
- * @pixi/mixin-cache-as-bitmap - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/mixin-cache-as-bitmap - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/mixin-cache-as-bitmap is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -35344,8 +35321,8 @@ var _math = require("@pixi/math");
 var _utils = require("@pixi/utils");
 var _settings = require("@pixi/settings");
 /*!
- * @pixi/constants - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/constants - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/constants is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -36191,8 +36168,8 @@ Object.defineProperties(_display.DisplayObject.prototype, {
 
 },{"@pixi/core":"7PEF8","@pixi/sprite":"9mbxh","@pixi/display":"b9G7r","@pixi/math":"dbvNN","@pixi/utils":"2DWCn","@pixi/settings":"01wFC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gorRP":[function(require,module,exports) {
 /*!
- * @pixi/mixin-get-child-by-name - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/mixin-get-child-by-name - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/mixin-get-child-by-name is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -36228,8 +36205,8 @@ Object.defineProperties(_display.DisplayObject.prototype, {
 
 },{"@pixi/display":"b9G7r"}],"1c09v":[function(require,module,exports) {
 /*!
- * @pixi/mixin-get-global-position - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/mixin-get-global-position - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/mixin-get-global-position is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -36272,8 +36249,8 @@ parcelHelpers.export(exports, "SimplePlane", ()=>SimplePlane
 parcelHelpers.export(exports, "SimpleRope", ()=>SimpleRope
 );
 /*!
- * @pixi/mesh-extras - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/mesh-extras - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/mesh-extras is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -36749,9 +36726,9 @@ var DEFAULT_BORDER_SIZE = 10;
      * @return Smaller number of vertical and horizontal scale.
      */ NineSlicePlane1.prototype._getMinScale = function() {
         var w = this._leftWidth + this._rightWidth;
-        var scaleW = this._width > w ? 1.0 : this._width / w;
+        var scaleW = this._width > w ? 1 : this._width / w;
         var h = this._topHeight + this._bottomHeight;
-        var scaleH = this._height > h ? 1.0 : this._height / h;
+        var scaleH = this._height > h ? 1 : this._height / h;
         var scale = Math.min(scaleW, scaleH);
         return scale;
     };
@@ -36826,8 +36803,8 @@ var DEFAULT_BORDER_SIZE = 10;
         var uvs = this.geometry.buffers[1].data;
         this._origWidth = texture.orig.width;
         this._origHeight = texture.orig.height;
-        var _uvw = 1.0 / this._origWidth;
-        var _uvh = 1.0 / this._origHeight;
+        var _uvw = 1 / this._origWidth;
+        var _uvh = 1 / this._origHeight;
         uvs[0] = uvs[8] = uvs[16] = uvs[24] = 0;
         uvs[1] = uvs[3] = uvs[5] = uvs[7] = 0;
         uvs[6] = uvs[14] = uvs[22] = uvs[30] = 1;
@@ -36850,8 +36827,8 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "AnimatedSprite", ()=>AnimatedSprite
 );
 /*!
- * @pixi/sprite-animated - v6.3.2
- * Compiled Wed, 04 May 2022 17:49:13 UTC
+ * @pixi/sprite-animated - v6.3.0
+ * Compiled Wed, 23 Mar 2022 18:58:56 UTC
  *
  * @pixi/sprite-animated is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
@@ -37023,7 +37000,7 @@ function __extends(d, b) {
         this._texture = this._textures[currentFrame];
         this._textureID = -1;
         this._textureTrimmedID = -1;
-        this._cachedTint = 0xFFFFFF;
+        this._cachedTint = 16777215;
         this.uvs = this._texture._uvs.uvsFloat32;
         if (this.updateAnchor) this._anchor.copyFrom(this._texture.defaultAnchor);
         if (this.onFrameChange) this.onFrameChange(this.currentFrame);
@@ -37187,12 +37164,25 @@ class Location extends _pixiJs.Sprite {
             this.y = this.locationPositions[i * 2 + 1];
         }
         this.interactive = true;
-    // this.on("pointerdown", () => this.onClick());
+        this.on("pointerdown", ()=>this.onClick()
+        );
     }
     //Click
-    // private onClick() {
-    //   console.log("Click");
-    // }
+    onClick() {
+        console.log("Click");
+        const style = new _pixiJs.TextStyle({
+            fontFamily: 'Silkscreen',
+            fontSize: 40,
+            fontWeight: 'bold',
+            fill: [
+                '#1e1e1e'
+            ]
+        });
+        this.endText = new _pixiJs.Text(`Goed`, style);
+        this.endText.x = 0;
+        this.endText.y = 0;
+        this.addChild(this.endText);
+    }
     update(delta) {}
 }
 
@@ -37339,36 +37329,36 @@ class UI extends _pixiJs.Container {
         this.x = game.pixi.screen.width / 2;
         this.y = game.pixi.screen.height / 2;
         //Text Box
-        const graphics = new _pixiJs.Graphics();
-        graphics.beginFill(0xFFFFFF);
-        graphics.lineStyle(8, 0x1E1E1E);
-        graphics.drawRect(-200, -350, 400, 50);
-        this.addChild(graphics);
-        //Box Lines
-        const graphics_line_l1 = new _pixiJs.Graphics();
-        const graphics_line_l2 = new _pixiJs.Graphics();
-        const graphics_line_l3 = new _pixiJs.Graphics();
-        const graphics_line_r1 = new _pixiJs.Graphics();
-        const graphics_line_r2 = new _pixiJs.Graphics();
-        const graphics_line_r3 = new _pixiJs.Graphics();
-        graphics_line_l1.lineStyle(5, 0x1E1E1E);
-        graphics_line_l2.lineStyle(5, 0x1E1E1E);
-        graphics_line_l3.lineStyle(5, 0x1E1E1E);
-        graphics_line_r1.lineStyle(5, 0x1E1E1E);
-        graphics_line_r2.lineStyle(5, 0x1E1E1E);
-        graphics_line_r3.lineStyle(5, 0x1E1E1E);
-        graphics_line_l1.drawRect(-290, -345, 75, 5);
-        graphics_line_l2.drawRect(-265, -327.5, 50, 5);
-        graphics_line_l3.drawRect(-240, -310, 25, 5);
-        graphics_line_r1.drawRect(215, -345, 75, 5);
-        graphics_line_r2.drawRect(215, -327.5, 50, 5);
-        graphics_line_r3.drawRect(215, -310, 25, 5);
-        this.addChild(graphics_line_l1);
-        this.addChild(graphics_line_l2);
-        this.addChild(graphics_line_l3);
-        this.addChild(graphics_line_r1);
-        this.addChild(graphics_line_r2);
-        this.addChild(graphics_line_r3);
+        const textBox = new _pixiJs.Graphics();
+        textBox.beginFill(16777215);
+        textBox.lineStyle(8, 1973790);
+        textBox.drawRect(-200, -380, 400, 50);
+        this.addChild(textBox);
+        //Box Lines Text Box
+        const textBox_line_l1 = new _pixiJs.Graphics();
+        const textBox_line_l2 = new _pixiJs.Graphics();
+        const textBox_line_l3 = new _pixiJs.Graphics();
+        const textBox_line_r1 = new _pixiJs.Graphics();
+        const textBox_line_r2 = new _pixiJs.Graphics();
+        const textBox_line_r3 = new _pixiJs.Graphics();
+        textBox_line_l1.lineStyle(5, 1973790);
+        textBox_line_l2.lineStyle(5, 1973790);
+        textBox_line_l3.lineStyle(5, 1973790);
+        textBox_line_r1.lineStyle(5, 1973790);
+        textBox_line_r2.lineStyle(5, 1973790);
+        textBox_line_r3.lineStyle(5, 1973790);
+        textBox_line_l1.drawRect(-290, -375, 75, 5);
+        textBox_line_l2.drawRect(-265, -357.5, 50, 5);
+        textBox_line_l3.drawRect(-240, -340, 25, 5);
+        textBox_line_r1.drawRect(215, -375, 75, 5);
+        textBox_line_r2.drawRect(215, -357.5, 50, 5);
+        textBox_line_r3.drawRect(215, -340, 25, 5);
+        this.addChild(textBox_line_l1);
+        this.addChild(textBox_line_l2);
+        this.addChild(textBox_line_l3);
+        this.addChild(textBox_line_r1);
+        this.addChild(textBox_line_r2);
+        this.addChild(textBox_line_r3);
         //Text
         const style = new _pixiJs.TextStyle({
             fontFamily: 'Silkscreen',
@@ -37378,10 +37368,52 @@ class UI extends _pixiJs.Container {
                 '#1e1e1e'
             ]
         });
-        this.textField = new _pixiJs.Text(`Friesland`, style);
-        this.textField.x = -115;
-        this.textField.y = -348;
+        this.textField = new _pixiJs.Text(`Zuid-Holland`, style);
+        this.textField.x = -150;
+        this.textField.y = -378;
         this.addChild(this.textField);
+        //Score Box
+        const scoreBox = new _pixiJs.Graphics();
+        scoreBox.beginFill(16777215);
+        scoreBox.lineStyle(8, 1973790);
+        scoreBox.drawRect(650, -380, 80, 50);
+        this.addChild(scoreBox);
+        //Box Line Score Box
+        const scoreBox_line_1 = new _pixiJs.Graphics();
+        const scoreBox_line_2 = new _pixiJs.Graphics();
+        const scoreBox_line_3 = new _pixiJs.Graphics();
+        scoreBox_line_1.lineStyle(5, 1973790);
+        scoreBox_line_2.lineStyle(5, 1973790);
+        scoreBox_line_3.lineStyle(5, 1973790);
+        scoreBox_line_1.drawRect(560, -375, 75, 5);
+        textBox_line_l2.drawRect(585, -357.5, 50, 5);
+        textBox_line_l3.drawRect(610, -340, 25, 5);
+        this.addChild(scoreBox_line_1);
+        this.addChild(scoreBox_line_2);
+        this.addChild(scoreBox_line_3);
+        //Score
+        const score = new _pixiJs.TextStyle({
+            fontFamily: 'Silkscreen',
+            fontSize: 30,
+            fontWeight: 'bold',
+            fill: [
+                '#1e1e1e'
+            ]
+        });
+        this.scoreField = new _pixiJs.Text(`000`, score);
+        this.scoreField.x = 658;
+        this.scoreField.y = -372;
+        this.addChild(this.scoreField);
+        //Lives Box
+        const livesBox = new _pixiJs.Graphics();
+        // const livesHitBox = new PIXI.Graphics();
+        livesBox.beginFill(5557638);
+        // livesHitBox.beginFill(0xc71818);
+        livesBox.lineStyle(8, 1973790);
+        livesBox.drawRect(-725, 225, 250, 20);
+        // livesHitBox.drawRect(-721, 229, 242, 12);
+        this.addChild(livesBox);
+        // this.addChild(livesHitBox); 
         //Temporary ASWD and Arrow Movement
         window.addEventListener("keydown", (e)=>this.onKeyDown(e)
         );
@@ -37462,7 +37494,7 @@ function getBundleURL() {
     try {
         throw new Error();
     } catch (err) {
-        var matches = ('' + err.stack).match(/(https?|file|ftp|(chrome|moz)-extension):\/\/[^)\n]+/g);
+        var matches = ('' + err.stack).match(/(https?|file|ftp):\/\/[^)\n]+/g);
         if (matches) // The first two stack frames will be this function and getBundleURLCached.
         // Use the 3rd one, which will be a runtime in the original bundle.
         return getBaseURL(matches[2]);
@@ -37470,10 +37502,10 @@ function getBundleURL() {
     return '/';
 }
 function getBaseURL(url) {
-    return ('' + url).replace(/^((?:https?|file|ftp|(chrome|moz)-extension):\/\/.+)\/[^/]+$/, '$1') + '/';
+    return ('' + url).replace(/^((?:https?|file|ftp):\/\/.+)\/[^/]+$/, '$1') + '/';
 } // TODO: Replace uses with `new URL(url).origin` when ie11 is no longer supported.
 function getOrigin(url) {
-    var matches = ('' + url).match(/(https?|file|ftp|(chrome|moz)-extension):\/\/[^/]+/);
+    var matches = ('' + url).match(/(https?|file|ftp):\/\/[^/]+/);
     if (!matches) throw new Error('Origin not found');
     return matches[0];
 }
@@ -37487,12 +37519,12 @@ module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "locati
 },{"./helpers/bundle-url":"lgJ39"}],"2FE4X":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "spacepirate.060958b6.png" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}],"5gmO0":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "bones.df4825d2.png" + "?" + Date.now();
+},{"./helpers/bundle-url":"lgJ39"}],"abLa8":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "spacepirate_destroyed.843bb271.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}],"gZ8P8":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "spacecraft.ff71d254.png" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}]},["6XGE1","h7u1C"], "h7u1C", "parcelRequire6d49")
+},{"./helpers/bundle-url":"lgJ39"}]},["5fJJd","h7u1C"], "h7u1C", "parcelRequirea0e5")
 
 //# sourceMappingURL=index.4bf444f7.js.map
