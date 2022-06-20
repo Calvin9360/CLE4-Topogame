@@ -619,7 +619,10 @@ class Game {
             else color.grayscale(0.325, false);
         }
         //
-        for (let enemy of this.enemies)enemy.update(delta);
+        for (let enemy of this.enemies){
+            if (this.collision(enemy, this.player)) enemy.texture = this.loader.resources["deadTexture"].texture;
+            enemy.update(delta);
+        }
     }
     collision(sprite1, sprite2) {
         const bounds1 = sprite1.getBounds();
@@ -37207,21 +37210,30 @@ class Enemy extends _pixiJs.Sprite {
         this.interactive = true;
         this.buttonMode = true;
         this.deadTexture = deadTexture;
-        this.on('pointerdown', ()=>this.killfish()
-        );
+        this.speedx = 2 + Math.random() * 1;
+        this.speedy = 2 + Math.random() * 1;
         this.x = Math.random() * 2000;
         this.y = Math.random() * 2000;
-        this.scale.set(0.5 + Math.random() * 1.5);
+        this.direction = Math.random() * 1;
+        this.on('pointerdown', ()=>this.killfish()
+        );
+        this.scale.set(0.5 + Math.random() * 1);
         const myfilter = new _pixiJs.filters.ColorMatrixFilter();
         this.filters = [
             myfilter
         ];
         myfilter.hue(Math.random() * 360, false);
+        if (this.direction < 0.5) this.direction = this.direction * 1;
+        else this.direction = this.direction * -1;
     }
     update(delta) {
         if (this.alive) {
-            this.x += Math.random() * 4 - 2;
-            this.y += Math.random() * 4 - 2;
+            this.x += this.speedx * this.direction;
+            this.y += this.speedy * this.direction;
+            if (this.x > 2000) this.x = 0;
+            else if (this.x < 0) this.x = 2000;
+            if (this.y > 2000) this.y = 0;
+            else if (this.y < 0) this.y = 2000;
         }
     }
     killfish() {

@@ -106,6 +106,9 @@ export class Game {
 
         //
         for (let enemy of this.enemies) {
+            if (this.collision(enemy, this.player)) {
+                enemy.texture = this.loader.resources["deadTexture"].texture!;
+              }
             enemy.update(delta);
         }
     }
