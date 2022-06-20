@@ -1,14 +1,26 @@
 import * as PIXI from "pixi.js";
 import { Location } from "./location";
-import { Enemy } from "./enemy"
+import { Enemy } from "./enemy";
 import { Player } from "./player";
+import { UI } from "./interface";
 
 import backgroundImage from "./images/background_nl.png";
-import locationImage from "./images/location.png";
-import selectedImage from "./images/selected.png";
-import enemyImage from "./images/shark.png"
-import deadImage from "./images/bones.png"
+// import locationImage from "./images/location_drenthe.png";
+// import locationImage from "./images/location_flevoland.png";
+// import locationImage from "./images/location_friesland.png";
+// import locationImage from "./images/location_gelderland.png";
+// import locationImage from "./images/location_groningen.png";
+// import locationImage from "./images/location_limburg.png";
+// import locationImage from "./images/location_noord-brabant.png";
+// import locationImage from "./images/location_noord-holland.png";
+// import locationImage from "./images/location_overijsel.png";
+// import locationImage from "./images/location_utrecht.png";
+// import locationImage from "./images/location_zeeland.png";
+import locationImage from "./images/location_zuid-holland.png";
+import enemyImage from "./images/spacepirate.png";
+import deadImage from "./images/bones.png";
 import playerImage from "./images/spacecraft.png";
+
 
 export class Game {
 
@@ -18,6 +30,7 @@ export class Game {
     locations: Location[] = [];
     enemies: Enemy[] = [];
     player: Player;
+    interface : UI;
 
     constructor() {
         this.pixi = new PIXI.Application({
@@ -25,71 +38,78 @@ export class Game {
             height: screen.height
         });
         document.body.appendChild(this.pixi.view);
-        
+
         this.loader = new PIXI.Loader();
         this.loader
-            .add("playerTexture", playerImage)
+            .add("backgroundTexture", backgroundImage)
             .add("locationTexture", locationImage)
-            .add("selectedTexture", selectedImage)
             .add("enemytexture", enemyImage)
             .add("deadTexture", deadImage)
-            .add("backgroundTexture", backgroundImage);
+            .add("playerTexture", playerImage);
         document.body.appendChild(this.pixi.view)
 
-        this.loader.load(() => this.doneLoading())
+        this.loader.load(() => this.doneLoading());
     }
 
 
     doneLoading() {
         //Background
         this.background = new PIXI.Sprite(this.loader.resources["backgroundTexture"].texture!);
-        this.pixi.stage.addChild(this.background)
+        this.pixi.stage.addChild(this.background);
 
-        //enemy
-        for (let i = 0; i < 10; i++) {
-            console.log("spawned")
-            let enemy = new Enemy(this, this.loader.resources["enemytexture"].texture!, this.loader.resources["deadTexture"].texture!)
-            this.pixi.stage.addChild(enemy)
-            this.enemies.push(enemy)
-        }
-
-        //Province
-        for (let i = 0; i < 1; i++) {
+        //Location
+        for (let i = 0; i < 12; i++) {
             let location = new Location(this.loader.resources["locationTexture"].texture!, this);
+            location.scale.x = 1.04;
+            location.scale.y = 1.04;
             this.locations.push(location);
             this.pixi.stage.addChild(location);
         }
 
+        //Enemy
+        for (let i = 0; i < 10; i++) {
+            let enemy = new Enemy(this, this.loader.resources["enemytexture"].texture!, this.loader.resources["deadTexture"].texture!);
+            this.pixi.stage.addChild(enemy);
+            this.enemies.push(enemy);
+        }
+
         //Player
         this.player = new Player(this, this.loader.resources["playerTexture"].texture!);
-        this.pixi.stage.addChild(this.player)
+        this.pixi.stage.addChild(this.player);
 
-        this.pixi.stage.x = this.pixi.screen.width / 2
-        this.pixi.stage.y = this.pixi.screen.height / 2
+        //UI
+        this.interface = new UI(this);
+        this.pixi.stage.addChild(this.interface);
 
-        this.pixi.ticker.add((delta) => this.update(delta))
+        this.pixi.stage.x = this.pixi.screen.width / 2;
+        this.pixi.stage.y = this.pixi.screen.height / 2;
 
-
+        this.pixi.ticker.add((delta) => this.update(delta));
     }
+
 
     update(delta: number) {
         this.player.update(delta);
+        this.interface.update(delta);
 
-      //Collision
-      for (const location of this.locations) {
-          location.update(delta);
-          if (this.collision(this.player, location)) {
-            location.texture = this.loader.resources["selectedTexture"].texture!;
-          } else {
-            location.texture = this.loader.resources["locationTexture"].texture!;
-          }
-      }
+        //Collision with Locations
+        for (const location of this.locations) {
+            const color = new PIXI.filters.ColorMatrixFilter()
+            location.filters = [color];
+            location.update(delta);
+            if (this.collision(this.player, location)) {
+                color.grayscale(0.2, false);
+            } else {
+                color.grayscale(0.325, false);
+            }
+        }
 
-      for (let enemy of this.enemies) {
-        enemy.update(delta)
+        //
+        for (let enemy of this.enemies) {
+            enemy.update(delta);
+        }
     }
-    }
-  
+
     collision(sprite1: PIXI.Sprite, sprite2: PIXI.Sprite) {
       const bounds1 = sprite1.getBounds();
       const bounds2 = sprite2.getBounds();
@@ -99,6 +119,6 @@ export class Game {
         bounds1.x + bounds1.width > bounds2.x &&
         bounds1.y < bounds2.y + bounds2.height &&
         bounds1.y + bounds1.height > bounds2.y
-      );
+        );
     }
-  }
+}

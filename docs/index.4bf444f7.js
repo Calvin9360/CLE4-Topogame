@@ -539,14 +539,24 @@ var _pixiJs = require("pixi.js");
 var _location = require("./location");
 var _enemy = require("./enemy");
 var _player = require("./player");
+var _interface = require("./interface");
 var _backgroundNlPng = require("./images/background_nl.png");
 var _backgroundNlPngDefault = parcelHelpers.interopDefault(_backgroundNlPng);
-var _locationPng = require("./images/location.png");
-var _locationPngDefault = parcelHelpers.interopDefault(_locationPng);
-var _selectedPng = require("./images/selected.png");
-var _selectedPngDefault = parcelHelpers.interopDefault(_selectedPng);
-var _sharkPng = require("./images/shark.png");
-var _sharkPngDefault = parcelHelpers.interopDefault(_sharkPng);
+// import locationImage from "./images/location_drenthe.png";
+// import locationImage from "./images/location_flevoland.png";
+// import locationImage from "./images/location_friesland.png";
+// import locationImage from "./images/location_gelderland.png";
+// import locationImage from "./images/location_groningen.png";
+// import locationImage from "./images/location_limburg.png";
+// import locationImage from "./images/location_noord-brabant.png";
+// import locationImage from "./images/location_noord-holland.png";
+// import locationImage from "./images/location_overijsel.png";
+// import locationImage from "./images/location_utrecht.png";
+// import locationImage from "./images/location_zeeland.png";
+var _locationZuidHollandPng = require("./images/location_zuid-holland.png");
+var _locationZuidHollandPngDefault = parcelHelpers.interopDefault(_locationZuidHollandPng);
+var _spacepiratePng = require("./images/spacepirate.png");
+var _spacepiratePngDefault = parcelHelpers.interopDefault(_spacepiratePng);
 var _bonesPng = require("./images/bones.png");
 var _bonesPngDefault = parcelHelpers.interopDefault(_bonesPng);
 var _spacecraftPng = require("./images/spacecraft.png");
@@ -561,7 +571,7 @@ class Game {
         });
         document.body.appendChild(this.pixi.view);
         this.loader = new _pixiJs.Loader();
-        this.loader.add("playerTexture", _spacecraftPngDefault.default).add("locationTexture", _locationPngDefault.default).add("selectedTexture", _selectedPngDefault.default).add("enemytexture", _sharkPngDefault.default).add("deadTexture", _bonesPngDefault.default).add("backgroundTexture", _backgroundNlPngDefault.default);
+        this.loader.add("backgroundTexture", _backgroundNlPngDefault.default).add("locationTexture", _locationZuidHollandPngDefault.default).add("enemytexture", _spacepiratePngDefault.default).add("deadTexture", _bonesPngDefault.default).add("playerTexture", _spacecraftPngDefault.default);
         document.body.appendChild(this.pixi.view);
         this.loader.load(()=>this.doneLoading()
         );
@@ -570,22 +580,26 @@ class Game {
         //Background
         this.background = new _pixiJs.Sprite(this.loader.resources["backgroundTexture"].texture);
         this.pixi.stage.addChild(this.background);
-        //enemy
-        for(let i = 0; i < 10; i++){
-            console.log("spawned");
+        //Location
+        for(let i = 0; i < 12; i++){
+            let location = new _location.Location(this.loader.resources["locationTexture"].texture, this);
+            location.scale.x = 1.04;
+            location.scale.y = 1.04;
+            this.locations.push(location);
+            this.pixi.stage.addChild(location);
+        }
+        //Enemy
+        for(let i1 = 0; i1 < 10; i1++){
             let enemy = new _enemy.Enemy(this, this.loader.resources["enemytexture"].texture, this.loader.resources["deadTexture"].texture);
             this.pixi.stage.addChild(enemy);
             this.enemies.push(enemy);
         }
-        //Province
-        for(let i1 = 0; i1 < 1; i1++){
-            let location = new _location.Location(this.loader.resources["locationTexture"].texture, this);
-            this.locations.push(location);
-            this.pixi.stage.addChild(location);
-        }
         //Player
         this.player = new _player.Player(this, this.loader.resources["playerTexture"].texture);
         this.pixi.stage.addChild(this.player);
+        //UI
+        this.interface = new _interface.UI(this);
+        this.pixi.stage.addChild(this.interface);
         this.pixi.stage.x = this.pixi.screen.width / 2;
         this.pixi.stage.y = this.pixi.screen.height / 2;
         this.pixi.ticker.add((delta)=>this.update(delta)
@@ -593,12 +607,18 @@ class Game {
     }
     update(delta) {
         this.player.update(delta);
-        //Collision
+        this.interface.update(delta);
+        //Collision with Locations
         for (const location of this.locations){
+            const color = new _pixiJs.filters.ColorMatrixFilter();
+            location.filters = [
+                color
+            ];
             location.update(delta);
-            if (this.collision(this.player, location)) location.texture = this.loader.resources["selectedTexture"].texture;
-            else location.texture = this.loader.resources["locationTexture"].texture;
+            if (this.collision(this.player, location)) color.grayscale(0.2, false);
+            else color.grayscale(0.325, false);
         }
+        //
         for (let enemy of this.enemies)enemy.update(delta);
     }
     collision(sprite1, sprite2) {
@@ -608,7 +628,7 @@ class Game {
     }
 }
 
-},{"pixi.js":"dsYej","./location":"6PjY6","./enemy":"e8Rej","./player":"6OTSH","./images/background_nl.png":"fNGPz","./images/location.png":"cWIbU","./images/selected.png":"HCxBO","./images/shark.png":"9NaJf","./images/bones.png":"5gmO0","./images/spacecraft.png":"gZ8P8","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dsYej":[function(require,module,exports) {
+},{"pixi.js":"dsYej","./location":"6PjY6","./enemy":"e8Rej","./player":"6OTSH","./interface":"5yLgp","./images/background_nl.png":"fNGPz","./images/location_zuid-holland.png":"1jX2W","./images/spacepirate.png":"2FE4X","./images/bones.png":"5gmO0","./images/spacecraft.png":"gZ8P8","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dsYej":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "utils", ()=>_utils
@@ -37130,26 +37150,47 @@ parcelHelpers.export(exports, "Location", ()=>Location
 );
 var _pixiJs = require("pixi.js");
 class Location extends _pixiJs.Sprite {
-    speed = 0;
+    locationPositions = [
+        1290,
+        400,
+        939,
+        688,
+        1001,
+        267,
+        892,
+        728,
+        1282,
+        250,
+        1048,
+        1165,
+        626,
+        1134,
+        735,
+        516,
+        1142,
+        594,
+        837,
+        884,
+        329,
+        1172,
+        501,
+        860
+    ];
     constructor(texture, game){
         super(texture);
         this.game = game;
-        this.x = 400;
-        this.y = 400;
+        for(let i = 0; i < 12; i++){
+            this.x = this.locationPositions[i * 2];
+            this.y = this.locationPositions[i * 2 + 1];
+        }
         this.interactive = true;
-        this.on("pointerdown", ()=>this.onClick()
-        );
+    // this.on("pointerdown", () => this.onClick());
     }
-    onClick() {
-        console.log("Click");
-        this.game.pixi.stage.removeChild(this);
-    }
-    update(delta) {
-        this.keepInScreen();
-    }
-    keepInScreen() {
-        if (this.getBounds().left > this.game.pixi.screen.right) this.x = -this.getBounds().width;
-    }
+    //Click
+    // private onClick() {
+    //   console.log("Click");
+    // }
+    update(delta) {}
 }
 
 },{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"e8Rej":[function(require,module,exports) {
@@ -37271,6 +37312,126 @@ class Player extends _pixiJs.Sprite {
     }
 }
 
+},{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5yLgp":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "UI", ()=>UI
+);
+var _pixiJs = require("pixi.js");
+class UI extends _pixiJs.Container {
+    xspeed = 0;
+    yspeed = 0;
+    constructor(game){
+        super();
+        this.game = game;
+        this.x = game.pixi.screen.width / 2;
+        this.y = game.pixi.screen.height / 2;
+        //Text Box
+        const graphics = new _pixiJs.Graphics();
+        graphics.beginFill(0xFFFFFF);
+        graphics.lineStyle(8, 0x1E1E1E);
+        graphics.drawRect(-200, -350, 400, 50);
+        this.addChild(graphics);
+        //Box Lines
+        const graphics_line_l1 = new _pixiJs.Graphics();
+        const graphics_line_l2 = new _pixiJs.Graphics();
+        const graphics_line_l3 = new _pixiJs.Graphics();
+        const graphics_line_r1 = new _pixiJs.Graphics();
+        const graphics_line_r2 = new _pixiJs.Graphics();
+        const graphics_line_r3 = new _pixiJs.Graphics();
+        graphics_line_l1.lineStyle(5, 0x1E1E1E);
+        graphics_line_l2.lineStyle(5, 0x1E1E1E);
+        graphics_line_l3.lineStyle(5, 0x1E1E1E);
+        graphics_line_r1.lineStyle(5, 0x1E1E1E);
+        graphics_line_r2.lineStyle(5, 0x1E1E1E);
+        graphics_line_r3.lineStyle(5, 0x1E1E1E);
+        graphics_line_l1.drawRect(-290, -345, 75, 5);
+        graphics_line_l2.drawRect(-265, -327.5, 50, 5);
+        graphics_line_l3.drawRect(-240, -310, 25, 5);
+        graphics_line_r1.drawRect(215, -345, 75, 5);
+        graphics_line_r2.drawRect(215, -327.5, 50, 5);
+        graphics_line_r3.drawRect(215, -310, 25, 5);
+        this.addChild(graphics_line_l1);
+        this.addChild(graphics_line_l2);
+        this.addChild(graphics_line_l3);
+        this.addChild(graphics_line_r1);
+        this.addChild(graphics_line_r2);
+        this.addChild(graphics_line_r3);
+        //Text
+        const style = new _pixiJs.TextStyle({
+            fontFamily: 'Silkscreen',
+            fontSize: 40,
+            fontWeight: 'bold',
+            fill: [
+                '#1e1e1e'
+            ]
+        });
+        this.textField = new _pixiJs.Text(`Friesland`, style);
+        this.textField.x = -115;
+        this.textField.y = -348;
+        this.addChild(this.textField);
+        //Temporary ASWD and Arrow Movement
+        window.addEventListener("keydown", (e)=>this.onKeyDown(e)
+        );
+        window.addEventListener("keyup", (e)=>this.onKeyUp(e)
+        );
+    }
+    update(delta) {
+        let mapwidth = 2000;
+        let mapheight = 2000;
+        let centerx = 0;
+        let centery = 0;
+        this.x = this.clamp(this.x + this.xspeed, 0, mapwidth);
+        this.y = this.clamp(this.y + this.yspeed, 0, mapheight);
+        let mapx = this.clamp(this.x, centerx, mapwidth - centerx);
+        let mapy = this.clamp(this.y, centery, mapheight - centery);
+        this.game.pixi.stage.pivot.set(mapx, mapy);
+    }
+    clamp(num, min, max) {
+        return Math.min(Math.max(num, min), max);
+    }
+    //Temporary ASWD and Arrows Movement
+    //Change This To Mouse Movement
+    onKeyDown(e) {
+        switch(e.key.toUpperCase()){
+            case "A":
+            case "ARROWLEFT":
+                this.xspeed = -7;
+                break;
+            case "D":
+            case "ARROWRIGHT":
+                this.xspeed = 7;
+                break;
+            case "W":
+            case "ARROWUP":
+                this.yspeed = -7;
+                break;
+            case "S":
+            case "ARROWDOWN":
+                this.yspeed = 7;
+                break;
+        }
+    }
+    onKeyUp(e) {
+        switch(e.key.toUpperCase()){
+            case " ":
+                break;
+            case "A":
+            case "D":
+            case "ARROWLEFT":
+            case "ARROWRIGHT":
+                this.xspeed = 0;
+                break;
+            case "W":
+            case "S":
+            case "ARROWUP":
+            case "ARROWDOWN":
+                this.yspeed = 0;
+                break;
+        }
+    }
+}
+
 },{"pixi.js":"dsYej","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fNGPz":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "background_nl.451e03f2.png" + "?" + Date.now();
 
@@ -37308,14 +37469,11 @@ exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
 exports.getOrigin = getOrigin;
 
-},{}],"cWIbU":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "location.ac3ad6ec.png" + "?" + Date.now();
+},{}],"1jX2W":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "location_zuid-holland.6309c8b2.png" + "?" + Date.now();
 
-},{"./helpers/bundle-url":"lgJ39"}],"HCxBO":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "selected.191d7da9.png" + "?" + Date.now();
-
-},{"./helpers/bundle-url":"lgJ39"}],"9NaJf":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "shark.29daeb95.png" + "?" + Date.now();
+},{"./helpers/bundle-url":"lgJ39"}],"2FE4X":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "spacepirate.060958b6.png" + "?" + Date.now();
 
 },{"./helpers/bundle-url":"lgJ39"}],"5gmO0":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('jcCUn') + "bones.df4825d2.png" + "?" + Date.now();
